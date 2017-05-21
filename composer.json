@@ -1,0 +1,43 @@
+{
+  "name": "zetta-code/zend-bootstrap",
+  "type": "library",
+  "description": "Zetta/ZendBoostrap",
+  "license": "MIT",
+  "keywords": [
+    "bootstrap",
+    "zf3"
+  ],
+  "homepage": "https://github.com/zetta-code/zend-bootstrap",
+  "authors": [
+    {
+      "name": "Thiago S. Santos",
+      "email": "thiagos.xsantos@gmail.com",
+      "homepage": "http://thiagossantos.com.br",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Zetta\\ZendBootstrap\\": "src/"
+    }
+  },
+  "require": {
+    "php": "^5.6 || ^7.0",
+    "zendframework/zend-stdlib": "^3.0"
+  },
+  "require-dev": {
+    "zendframework/zend-mvc": "^3.0",
+    "zendframework/zend-form": "^2.9",
+    "zendframework/zend-navigation": "^2.8",
+    "zendframework/zend-paginator": "^2.7",
+    "zendframework/zend-mail": "^2.7",
+    "jenssegers/date": "^3.2",
+    "zendframework/zend-mvc-plugin-flashmessenger": "^1.0"
+  },
+  "extra": {
+    "zf": {
+      "component": "Zetta\\ZendBootstrap",
+      "config-provider": "Zetta\\ZendBootstrap\\ConfigProvider"
+    }
+  }
+}

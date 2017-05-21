@@ -1,0 +1,93 @@
+<?php if ($this->pageCount): ?>
+    <div class="text-center">
+        <ul class="pagination">
+            <!-- First page link -->
+            <?php
+            if (isset($this->previous)):
+                $options['query']['page'] = $this->first;
+            ?>
+                <li>
+                    <a href="<?php echo $this->url($route, $params, $options, $reuseMatchedParams); ?>">
+                        <i class="fa fa-fw fa-angle-double-left"></i>
+                    </a>
+                </li>
+            <?php else: ?>
+                <li class="disabled">
+                    <span>
+                        <i class="fa fa-fw fa-angle-double-left"></i>
+                    </span>
+                </li>
+            <?php endif; ?>
+            <!-- Previous page link -->
+            <?php
+            if (isset($this->previous)):
+                $options['query']['page'] = $this->previous;
+                ?>
+                <li>
+                    <a href="<?php echo $this->url($route, $params, $options, $reuseMatchedParams); ?>">
+                        <i class="fa fa-fw fa-angle-left"></i>
+                    </a>
+                </li>
+            <?php else: ?>
+                <li class="disabled">
+                    <span>
+                        <i class="fa fa-fw fa-angle-left"></i>
+                    </span>
+                </li>
+            <?php endif; ?>
+            <!-- Numbered page links -->
+            <?php foreach ($this->pagesInRange as $page): ?>
+                <?php
+                if ($page != $this->current):
+                    $options['query']['page'] = $page;
+                    ?>
+                    <li>
+                        <a href="<?php echo $this->url($route, $params, $options, $reuseMatchedParams); ?>">
+                            <?php echo $page; ?>
+                        </a>
+                    </li>
+                <?php else: ?>
+                    <li class="active">
+                        <a href="#"><?php echo $page; ?></a>
+                    </li>
+                <?php endif; ?>
+            <?php endforeach; ?>
+
+            <!-- Next page link -->
+            <?php
+            if (isset($this->next)):
+                $options['query']['page'] = $this->next;
+            ?>
+                <li>
+                    <a href="<?php echo $this->url($route, $params, $options, $reuseMatchedParams); ?>">
+                        <i class="fa fa-fw fa-angle-right"></i>
+                    </a>
+                </li>
+            <?php else:?>
+                <li class="disabled">
+                    <span>
+                        <i class="fa fa-fw fa-angle-right"></i>
+                    </span>
+                </li>
+            <?php endif; ?>
+
+            <!-- Last page link -->
+            <?php
+            if (isset($this->next)):
+                $options['query']['page'] = $this->last;
+            ?>
+                <li>
+                    <a href="<?php echo $this->url($route, $params, $options, $reuseMatchedParams); ?>">
+                        <i class="fa fa-fw fa-angle-double-right"></i>
+                    </a>
+                </li>
+            <?php else: ?>
+                <li class="disabled">
+                    <span>
+                        <i class="fa fa-fw fa-angle-double-right"></i>
+                    </span>
+                </li>
+            <?php endif; ?>
+        </ul>
+    </div>
+<?php endif; ?>
