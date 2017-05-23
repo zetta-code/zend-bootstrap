@@ -94,10 +94,10 @@ class ConfigProvider implements ConfigProviderInterface
     {
         return [
             'aliases' => [
-                'tssFlashMessenger' => View\Helper\FlashMessenger::class,
-                'tssFormRow' => Form\View\Helper\FormRow::class,
-                'tssPaginator' => View\Helper\Paginator::class,
-                'tssReferer' => View\Helper\Referer::class,
+                'zettaFlashMessenger' => View\Helper\FlashMessenger::class,
+                'zettaFormRow' => Form\View\Helper\FormRow::class,
+                'zettaPaginator' => View\Helper\Paginator::class,
+                'zettaReferer' => View\Helper\Referer::class,
             ],
             'factories' => [
                 Form\View\Helper\FormRow::class => InvokableFactory::class,

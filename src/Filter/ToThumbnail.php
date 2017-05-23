@@ -149,8 +149,6 @@ class ToThumbnail extends AbstractFilter
      */
     public function getOverwrite()
     {
-        var_dump($this->options);
-        exit;
         return $this->options['overwrite'];
     }
 

@@ -1,7 +1,7 @@
 {
   "name": "zetta-code/zend-bootstrap",
   "type": "library",
-  "description": "Zetta/ZendBoostrap",
+  "description": "Zetta\\ZendBoostrap",
   "license": "MIT",
   "keywords": [
     "bootstrap",
