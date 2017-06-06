@@ -1,17 +1,17 @@
 <?php
 /**
  * @link      http://github.com/zetta-repo/zend-bootstrap for the canonical source repository
- * @copyright Copyright (c) 2016 Zetta Code
+ * @copyright Copyright (c) 2017 Zetta Code
  */
 
 namespace Zetta\ZendBootstrap\Controller\Plugin;
 
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\Mvc\Controller\Plugin\Url as UrlPlugin;
 use Zend\Mvc\Exception;
 use Zend\Mvc\InjectApplicationEventInterface;
+use Zend\Stdlib\ArrayUtils;
 
-class Url extends AbstractPlugin
+class Url extends UrlPlugin
 {
     /**
      * @var bool
@@ -54,10 +54,10 @@ class Url extends AbstractPlugin
         }
         $query = $controller->getRequest()->getQuery()->toArray();
         if ($reuseQueriedParams && $query) {
-            $options = array_merge(['query' => $query], $options);
+            $options = ArrayUtils::merge(['query' => $query], $options);
         }
 
-        return $controller->getPluginManager()->get(UrlPlugin::class)->fromRoute($route, $params, $options, $reuseMatchedParams);
+        return parent::fromRoute($route, $params, $options, $reuseMatchedParams);
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 /**
  * @link      http://github.com/zetta-repo/zend-bootstrap for the canonical source repository
- * @copyright Copyright (c) 2016 Zetta Code
+ * @copyright Copyright (c) 2017 Zetta Code
  */
 
 namespace Zetta\ZendBootstrap\Controller\Plugin;

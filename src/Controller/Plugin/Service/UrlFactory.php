@@ -1,7 +1,7 @@
 <?php
 /**
  * @link      http://github.com/zetta-repo/zend-bootstrap for the canonical source repository
- * @copyright Copyright (c) 2016 Zetta Code
+ * @copyright Copyright (c) 2017 Zetta Code
  */
 
 namespace Zetta\ZendBootstrap\Controller\Plugin\Service;
@@ -22,7 +22,7 @@ class UrlFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $configuration = $container->get('Configuration');
-        $config = isset($configuration['zetta-url']) ? $configuration['zetta-url'] : [];
+        $config = isset($configuration['zend-boostrap']) ? $configuration['zend-boostrap'] : [];
         return new Url($config);
     }
 }
