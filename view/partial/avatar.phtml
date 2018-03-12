@@ -1,0 +1,106 @@
+<?php
+// get attribs for element
+$attribs = [
+    'id'     => $page->getId(),
+    'title'    => $this->translate($page->getTitle(), $page->getTextDomain()),
+];
+
+$classnames = [];
+if ($addClassToListItem === false) {
+    $class = $page->getClass();
+    if (!empty($class)) {
+        $classnames[] = $page->getClass();
+    }
+}
+$maxDepth = $menu->getMaxDepth();
+$depth = $page->get('depth');
+$isBelowMaxLevel = ($maxDepth > $depth) || ($maxDepth === null) || ($maxDepth === false);
+if (count($page->getPages()) > 0 && $isBelowMaxLevel) {
+    $classnames[] = $depth == 0 ? $menu->getSubAClassLevel0() : $menu->getSubAClassLevelN();
+    $attribs['data-toggle'] = 'dropdown';
+}
+$attribs['class'] = implode(" ", $classnames);
+
+// add additional attributes
+$attr = $page->get('attribs');
+if (is_array($attr)) {
+    $attribs = $attribs + $attr;
+}
+
+// does page have a href?
+if (count($page->getPages()) > 0 && !empty($menu->getHrefSubToggleOverride())) {
+    $href = $menu->getHrefSubToggleOverride();
+} else {
+    $href = $page->getHref();
+}
+if ($href) {
+    $element = 'a';
+    $attribs['href'] = $href;
+    $attribs['target'] = $page->getTarget();
+} else {
+    $element = 'span';
+}
+
+
+foreach ($attribs as $key => $value) {
+    if ($value === null || (is_string($value) && !strlen($value))) {
+        if ( (strpos($key, "data") === false) && (strpos($key, "aria") === false) ) {
+            unset($attribs[$key]);
+        }
+    }
+}
+
+
+$xhtml = '';
+foreach ((array) $attribs as $key => $val) {
+    $key = $this->escapeHtml($key);
+
+    if (('on' == substr($key, 0, 2)) || ('constraints' == $key)) {
+        // Don't escape event attributes; _do_ substitute double quotes with singles
+        if (!is_scalar($val)) {
+            // non-scalar data should be cast to JSON first
+            $val = \Zend\Json\Json::encode($val);
+        }
+    } else {
+        if (is_array($val)) {
+            $val = implode(' ', $val);
+        }
+    }
+
+    $val = $this->escapeHtmlAttr($val);
+
+    if ('id' == $key) {
+        $val = $menu->normalizeId($val);
+    }
+
+    if (strpos($val, '"') !== false) {
+        $xhtml .= " $key='$val'";
+    } else {
+        $xhtml .= " $key=\"$val\"";
+    }
+}
+
+$html = '<' . $element . $xhtml . '>';
+$addonLeft = $page->get('addon-left');
+if ($addonLeft) {
+    $html .= $addonLeft;
+}
+$user = $this->identity();
+if ($user) {
+    $label = '<span class="user-name">' . explode(' ', ($user->getName() ?: $user->getUsername()), 2)[0] . '</span>';
+    $html .= '<img class="user-avatar" src="' . $this->basePath($user->getAvatar()) .'" alt="@' . $user->getUsername() . '">';
+} else {
+    $label = $this->translate('avatar', $page->getTextDomain());
+}
+if ($escapeLabel === true) {
+    $html .= $this->escapeHtml($label);
+} else {
+    $html .= $label;
+}
+$addonRight = $page->get('addon-right');
+if ($addonRight) {
+    $html .= $addonRight;
+}
+$html .= '</' . $element . '>';
+
+echo $html;
