@@ -18,7 +18,7 @@ class Menu extends \Zend\View\Helper\Navigation\Menu
      *
      * @var string
      */
-    protected $defaultLiClass = '';
+    protected $defaultLiClass = 'nav-item';
 
     /**
      * CSS class to use for the ul sub-menu element

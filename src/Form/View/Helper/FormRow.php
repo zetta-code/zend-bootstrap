@@ -139,7 +139,12 @@ class FormRow extends FormRowHelper
                 if ($label !== ''
                     && ($element instanceof LabelAwareInterface && $element->getLabelOption('always_wrap'))
                 ) {
-                    $label = '<span>' . $label . '</span>';
+                    if ($element->getLabelOption('span_class')) {
+                        $label = '<span class="' . $element->getLabelOption('span_class') . '">' . $label;
+                    } else {
+                        $label = '<span>' . $label;
+                    }
+                    $label .= '</span>';
                 }
 
                 // Button element is a special case, because label is always rendered inside it
