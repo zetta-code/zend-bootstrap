@@ -28,7 +28,7 @@ if (is_array($attr)) {
 }
 
 // does page have a href?
-if (count($page->getPages()) > 0 && !empty($menu->getHrefSubToggleOverride())) {
+if ($page->hasPages(! $menu->getRenderInvisible()) && !empty($menu->getHrefSubToggleOverride())) {
     $href = $menu->getHrefSubToggleOverride();
 } else {
     $href = $page->getHref();

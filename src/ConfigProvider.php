@@ -118,8 +118,8 @@ class ConfigProvider implements ConfigProviderInterface
     {
         return [
             'flashmessenger' => [
-                'message_open_format' => '<div%s><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><ul><li>',
-                'message_close_string' => '</li></ul></div>',
+                'message_open_format' => '<div%s><ul><li>',
+                'message_close_string' => '</li></ul><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>',
                 'message_separator_string' => '</li><li>'
             ]
         ];
