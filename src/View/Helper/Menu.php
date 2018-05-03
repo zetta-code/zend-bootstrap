@@ -189,7 +189,7 @@ class Menu extends ZendMenu
                 $liClasses[] = $this->getDefaultLiClass();
             }
             $isBelowMaxLevel = ($maxDepth > $depth) || ($maxDepth === null) || ($maxDepth === false);
-            if (!empty($page->pages) && $isBelowMaxLevel) {
+            if ($page->hasPages(! $this->renderInvisible) && $isBelowMaxLevel) {
                 $liClasses[] = ($depth == 0 ? $this->getSubLiClassLevel0() : $this->getSubLiClassLevelN());
             }
             // Add CSS class from page to <li>
@@ -246,7 +246,7 @@ class Menu extends ZendMenu
         $maxDepth = $this->getMaxDepth();
         $depth = $page->get('depth');
         $isBelowMaxLevel = ($maxDepth > $depth) || ($maxDepth === null) || ($maxDepth === false);
-        if (count($page->getPages()) > 0 && $isBelowMaxLevel) {
+        if ($page->hasPages(! $this->renderInvisible) && $isBelowMaxLevel) {
             $classnames[] = $depth == 0 ? $this->getSubAClassLevel0() : $this->getSubAClassLevelN();
             $attribs['data-toggle'] = 'dropdown';
         }
@@ -259,7 +259,7 @@ class Menu extends ZendMenu
         }
 
         // does page have a href?
-        if (count($page->getPages()) > 0 && !empty($this->getHrefSubToggleOverride())) {
+        if ($page->hasPages(! $this->renderInvisible) && !empty($this->getHrefSubToggleOverride())) {
             $href = $this->getHrefSubToggleOverride();
         } else {
             $href = $page->getHref();

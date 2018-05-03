@@ -15,7 +15,7 @@ if ($addClassToListItem === false) {
 $maxDepth = $menu->getMaxDepth();
 $depth = $page->get('depth');
 $isBelowMaxLevel = ($maxDepth > $depth) || ($maxDepth === null) || ($maxDepth === false);
-if (count($page->getPages()) > 0 && $isBelowMaxLevel) {
+if ($page->hasPages(! $menu->getRenderInvisible()) > 0 && $isBelowMaxLevel) {
     $classnames[] = $depth == 0 ? $menu->getSubAClassLevel0() : $menu->getSubAClassLevelN();
     $attribs['data-toggle'] = 'dropdown';
 }
@@ -28,7 +28,7 @@ if (is_array($attr)) {
 }
 
 // does page have a href?
-if (count($page->getPages()) > 0 && !empty($menu->getHrefSubToggleOverride())) {
+if ($page->hasPages(! $menu->getRenderInvisible()) && !empty($menu->getHrefSubToggleOverride())) {
     $href = $menu->getHrefSubToggleOverride();
 } else {
     $href = $page->getHref();
