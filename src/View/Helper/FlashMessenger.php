@@ -1,13 +1,15 @@
 <?php
 /**
- * @link      http://github.com/zetta-repo/zend-bootstrap for the canonical source repository
- * @copyright Copyright (c) 2017 Zetta Code
+ * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @copyright Copyright (c) 2018 Zetta Code
  */
 
 namespace Zetta\ZendBootstrap\View\Helper;
 
+use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger as PluginFlashMessenger;
+use Zend\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger as FlashMessengerHelper;
+use Zend\Stdlib\ArrayUtils;
 use Zend\View\Helper\AbstractHelper;
-use Zend\View\Helper\FlashMessenger as FlashMessengerHelper;
 
 class FlashMessenger extends AbstractHelper
 {
@@ -16,65 +18,75 @@ class FlashMessenger extends AbstractHelper
      */
     protected $flashMessengerHelper;
 
+    /**
+     * Default class for the div tag
+     *
+     * @var string
+     */
+    protected $divClass = 'alerts';
+
+    /**
+     * Default attributes for the open format tag
+     *
+     * @var array
+     */
+    protected $classes = [
+        PluginFlashMessenger::NAMESPACE_DEFAULT => ['alert', 'alert-secondary', 'alert-dismissible', 'fade', 'show', 'animated', 'shake'],
+        PluginFlashMessenger::NAMESPACE_SUCCESS => ['alert', 'alert-success', 'alert-dismissible', 'fade', 'show', 'animated', 'shake'],
+        PluginFlashMessenger::NAMESPACE_INFO => ['alert', 'alert-info', 'alert-dismissible', 'fade', 'show', 'animated', 'shake'],
+        PluginFlashMessenger::NAMESPACE_WARNING => ['alert', 'alert-warning', 'alert-dismissible', 'fade', 'show', 'animated', 'shake'],
+        PluginFlashMessenger::NAMESPACE_ERROR => ['alert', 'alert-danger', 'alert-dismissible', 'fade', 'show', 'animated', 'shake'],
+    ];
+
+    /**
+     * @return FlashMessenger
+     */
     public function __invoke()
+    {
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function __toString()
     {
         return $this->render();
     }
 
-    public function render()
+    /**
+     * Render All Messages
+     *
+     * @param  array $classes
+     * @param  null|bool $autoEscape
+     * @return string
+     */
+    public function render(array $classes = [], $autoEscape = null)
     {
-        $divOpen = '<div class="flashmessenger">';
+        $divOpen = '<div class="' . $this->divClass . '">';
         $divClose = '</div>';
+        $hasMessages = false;
 
-        // default
-        if ($this->getFlashMessengerHelper()->hasCurrentMessages()) {
-            $divOpen .= $this->getFlashMessengerHelper()->renderCurrent('default', array('alert', 'alert-success', 'animated', 'shake'));
-            $this->getFlashMessengerHelper()->clearCurrentMessagesFromNamespace('default');
-        } else {
-            $divOpen .= $this->getFlashMessengerHelper()->render('default', array('alert', 'alert-success', 'animated', 'shake'));
+        foreach ($this->classes as $namespace => $namespaceClasses) {
+            $namespaceClasses = ArrayUtils::merge($namespaceClasses, $classes);
+            if ($this->getFlashMessengerHelper()->getPluginFlashMessenger()->hasCurrentMessages($namespace)) {
+                $hasMessages = true;
+                $divOpen .= $this->getFlashMessengerHelper()->renderCurrent($namespace, $namespaceClasses, $autoEscape);
+                $this->getFlashMessengerHelper()->getPluginFlashMessenger()->clearCurrentMessagesFromNamespace($namespace);
+            } elseif ($this->getFlashMessengerHelper()->getPluginFlashMessenger()->hasMessages($namespace)) {
+                $hasMessages = true;
+                $divOpen .= $this->getFlashMessengerHelper()->render($namespace, $namespaceClasses, $autoEscape);
+            }
         }
 
-        // success
-        if ($this->getFlashMessengerHelper()->hasCurrentSuccessMessages()) {
-            $divOpen .= $this->getFlashMessengerHelper()->renderCurrent('success', array('alert', 'alert-success', 'animated', 'shake'));
-            $this->getFlashMessengerHelper()->clearCurrentMessagesFromNamespace('success');
-        } else {
-            $divOpen .= $this->getFlashMessengerHelper()->render('success', array('alert', 'alert-success', 'animated', 'shake'));
-        }
-
-        // info
-        if ($this->getFlashMessengerHelper()->hasCurrentInfoMessages()) {
-            $divOpen .= $this->getFlashMessengerHelper()->renderCurrent('info', array('alert', 'alert-info', 'animated', 'shake'));
-            $this->getFlashMessengerHelper()->clearCurrentMessagesFromNamespace('info');
-        } else {
-            $divOpen .= $this->getFlashMessengerHelper()->render('info', array('alert', 'alert-info', 'animated', 'shake'));
-        }
-
-        // warning
-        if ($this->getFlashMessengerHelper()->hasCurrentWarningMessages()) {
-            $divOpen .= $this->getFlashMessengerHelper()->renderCurrent('warning', array('alert', 'alert-warning', 'animated', 'shake'));
-            $this->getFlashMessengerHelper()->clearCurrentMessagesFromNamespace('warning');
-        } else {
-            $divOpen .= $this->getFlashMessengerHelper()->render('warning', array('alert', 'alert-warning', 'animated', 'shake'));
-        }
-
-        // error
-        if ($this->getFlashMessengerHelper()->hasCurrentErrorMessages()) {
-            $divOpen .= $this->getFlashMessengerHelper()->renderCurrent('error', array('alert', 'alert-danger', 'animated', 'shake'));
-            $this->getFlashMessengerHelper()->clearCurrentMessagesFromNamespace('error');
-        } else {
-            $divOpen .= $this->getFlashMessengerHelper()->render('error', array('alert', 'alert-danger', 'animated', 'shake'));
-        }
-
-        return $divOpen . '' . $divClose;
+        return $hasMessages ? $divOpen . $divClose : '';
     }
 
     /**
-     * Retrieve the FlashMessenger helper
-     *
+     * Get the FlashMessenger flashMessengerHelper
      * @return FlashMessengerHelper
      */
-    protected function getFlashMessengerHelper()
+    public function getFlashMessengerHelper()
     {
         if ($this->flashMessengerHelper) {
             return $this->flashMessengerHelper;
@@ -89,5 +101,56 @@ class FlashMessenger extends AbstractHelper
         }
 
         return $this->flashMessengerHelper;
+    }
+
+    /**
+     * Set the FlashMessenger flashMessengerHelper
+     * @param FlashMessengerHelper $flashMessengerHelper
+     * @return FlashMessenger
+     */
+    public function setFlashMessengerHelper($flashMessengerHelper)
+    {
+        $this->flashMessengerHelper = $flashMessengerHelper;
+        return $this;
+    }
+
+    /**
+     * Get the FlashMessenger divClass
+     * @return string
+     */
+    public function getDivClass()
+    {
+        return $this->divClass;
+    }
+
+    /**
+     * Set the FlashMessenger divClass
+     * @param string $divClass
+     * @return FlashMessenger
+     */
+    public function setDivClass($divClass)
+    {
+        $this->divClass = $divClass;
+        return $this;
+    }
+
+    /**
+     * Get the FlashMessenger classes
+     * @return array
+     */
+    public function getClasses()
+    {
+        return $this->classes;
+    }
+
+    /**
+     * Set the FlashMessenger classes
+     * @param array $classes
+     * @return FlashMessenger
+     */
+    public function setClasses($classes)
+    {
+        $this->classes = $classes;
+        return $this;
     }
 }

@@ -1,7 +1,7 @@
 <?php
 /**
- * @link      http://github.com/zetta-repo/zend-bootstrap for the canonical source repository
- * @copyright Copyright (c) 2017 Zetta Code
+ * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @copyright Copyright (c) 2018 Zetta Code
  */
 
 namespace Zetta\ZendBootstrap\View\Helper;
@@ -10,8 +10,9 @@ use RecursiveIteratorIterator;
 use Zend\Navigation\AbstractContainer;
 use Zend\Navigation\Page\AbstractPage;
 use Zend\View\Exception;
+use Zend\View\Helper\Navigation\Menu as ZendMenu;
 
-class Menu extends \Zend\View\Helper\Navigation\Menu
+class Menu extends ZendMenu
 {
     /**
      * default CSS class to use for li elements
@@ -91,7 +92,8 @@ class Menu extends \Zend\View\Helper\Navigation\Menu
         $escapeLabels,
         $addClassToListItem,
         $liActiveClass
-    ) {
+    )
+    {
         $html = '';
 
         // find deepest active
@@ -101,7 +103,7 @@ class Menu extends \Zend\View\Helper\Navigation\Menu
         $escaper = $this->view->plugin('escapeHtmlAttr');
 
         if ($found) {
-            $foundPage  = $found['page'];
+            $foundPage = $found['page'];
             $foundDepth = $found['depth'];
         } else {
             $foundPage = null;
@@ -123,10 +125,10 @@ class Menu extends \Zend\View\Helper\Navigation\Menu
             $depth = $iterator->getDepth();
             $page->set('depth', $depth);
             $isActive = $page->isActive(true);
-            if ($depth < $minDepth || ! $this->accept($page)) {
+            if ($depth < $minDepth || !$this->accept($page)) {
                 // page is below minDepth or not accepted by acl/visibility
                 continue;
-            } elseif ($onlyActive && ! $isActive) {
+            } elseif ($onlyActive && !$isActive) {
                 // page is not active itself, but might be in the active branch
                 $accept = false;
                 if ($foundPage) {
@@ -135,7 +137,7 @@ class Menu extends \Zend\View\Helper\Navigation\Menu
                         $accept = true;
                     } elseif ($foundPage->getParent()->hasPage($page)) {
                         // page is a sibling of the active page...
-                        if (! $foundPage->hasPages(! $this->renderInvisible)
+                        if (!$foundPage->hasPages(!$this->renderInvisible)
                             || is_int($maxDepth) && $foundDepth + 1 > $maxDepth
                         ) {
                             // accept if active page has no children, or the
@@ -144,14 +146,14 @@ class Menu extends \Zend\View\Helper\Navigation\Menu
                         }
                     }
                 }
-                if (! $accept) {
+                if (!$accept) {
                     continue;
                 }
             }
 
             // make sure indentation is correct
             $depth -= $minDepth;
-            $myIndent = $indent.str_repeat('        ', $depth);
+            $myIndent = $indent . str_repeat('        ', $depth);
             if ($depth > $prevDepth) {
                 // start new ul tag
                 $ulClass = '' .
@@ -165,7 +167,7 @@ class Menu extends \Zend\View\Helper\Navigation\Menu
             } elseif ($prevDepth > $depth) {
                 // close li/ul tags until we're at current depth
                 for ($i = $prevDepth; $i > $depth; $i--) {
-                    $ind = $indent.str_repeat('        ', $i);
+                    $ind = $indent . str_repeat('        ', $i);
                     $html .= $ind . '    </li>' . PHP_EOL;
                     $html .= $ind . '</ul>' . PHP_EOL;
                 }
@@ -225,13 +227,13 @@ class Menu extends \Zend\View\Helper\Navigation\Menu
     {
         $partial = $this->getPagePartial(get_class($page));
         if ($partial) {
-            return $this->renderPagePartial($page, $escapeLabel, $addClassToListItem, $partial);
+            return $this->htmlifyWithPartial($page, $escapeLabel, $addClassToListItem, $partial);
         }
 
         // get attribs for element
         $attribs = [
-            'id'     => $page->getId(),
-            'title'    => $this->translate($page->getTitle(), $page->getTextDomain()),
+            'id' => $page->getId(),
+            'title' => $this->translate($page->getTitle(), $page->getTextDomain()),
         ];
 
         $classnames = [];
@@ -299,7 +301,10 @@ class Menu extends \Zend\View\Helper\Navigation\Menu
      * as-is, and will be available in the partial script as 'container', e.g.
      * <code>echo 'Number of pages: ', count($this->container);</code>.
      *
-     * @param    string|array    $partial    [optional] partial view script to use.
+     * @param  AbstractPage $page page to generate HTML for
+     * @param  bool $escapeLabel Whether or not to escape the label
+     * @param  bool $addClassToListItem Whether or not to add the page class to the list item
+     * @param  string|array $partial [optional] partial view script to use.
      *                                    Default is to use the partial
      *                                    registered in the helper. If an array
      *                                    is given, it is expected to contain two
@@ -310,7 +315,7 @@ class Menu extends \Zend\View\Helper\Navigation\Menu
      * @throws Exception\RuntimeException if no partial provided
      * @throws Exception\InvalidArgumentException if partial is invalid array
      */
-    public function renderPagePartial(AbstractPage $page, $escapeLabel = true, $addClassToListItem = false, $partial = null)
+    public function htmlifyWithPartial(AbstractPage $page, $escapeLabel = true, $addClassToListItem = false, $partial = null)
     {
         if (null === $partial) {
             $partial = $this->getPartial();
@@ -336,8 +341,8 @@ class Menu extends \Zend\View\Helper\Navigation\Menu
             if (count($partial) != 2) {
                 throw new Exception\InvalidArgumentException(
                     'Unable to render menu: A view partial supplied as '
-                    .    'an array must contain two values: partial view '
-                    .    'script and module where script can be found'
+                    . 'an array must contain two values: partial view '
+                    . 'script and module where script can be found'
                 );
             }
 
@@ -509,7 +514,6 @@ class Menu extends \Zend\View\Helper\Navigation\Menu
 
     /**
      * Sets which partial view script to use for rendering menu
-     *
      * @param    string $page
      * @param    string|array $partial partial view script or null. If an array is
      *                                given, it is expected to contain two
@@ -528,10 +532,8 @@ class Menu extends \Zend\View\Helper\Navigation\Menu
     }
 
     /**
-     * @param string $page
-
      * Returns partial view script to use for rendering menu
-     *
+     * @param string $page
      * @return string|array|null
      */
     public function getPagePartial($page)

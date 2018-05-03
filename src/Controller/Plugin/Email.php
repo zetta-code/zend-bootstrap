@@ -1,12 +1,13 @@
 <?php
 /**
- * @link      http://github.com/zetta-repo/zend-bootstrap for the canonical source repository
- * @copyright Copyright (c) 2017 Zetta Code
+ * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @copyright Copyright (c) 2018 Zetta Code
  */
 
 namespace Zetta\ZendBootstrap\Controller\Plugin;
 
 use Zend\Mail\Message;
+use Zend\Mail\Transport\TransportInterface;
 use Zend\Mime;
 use Zend\Mvc\Controller\AbstractController;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
@@ -33,11 +34,14 @@ class Email extends AbstractPlugin
      */
     protected $controller;
 
+    /**
+     * @var TransportInterface
+     */
     protected $transport;
 
     /**
      * EmailPlugin constructor.
-     * @param $transport
+     * @param TransportInterface $transport
      * @param array $config
      */
     public function __construct($transport, $config = [])
@@ -61,7 +65,7 @@ class Email extends AbstractPlugin
     }
 
     /**
-     * @return mixed
+     * @return TransportInterface
      */
     public function getTransport()
     {
@@ -69,7 +73,7 @@ class Email extends AbstractPlugin
     }
 
     /**
-     * @param mixed $transport
+     * @param TransportInterface $transport
      */
     public function setTransport($transport)
     {

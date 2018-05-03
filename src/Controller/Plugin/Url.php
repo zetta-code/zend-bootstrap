@@ -1,7 +1,7 @@
 <?php
 /**
- * @link      http://github.com/zetta-repo/zend-bootstrap for the canonical source repository
- * @copyright Copyright (c) 2017 Zetta Code
+ * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @copyright Copyright (c) 2018 Zetta Code
  */
 
 namespace Zetta\ZendBootstrap\Controller\Plugin;
@@ -20,16 +20,19 @@ class Url extends UrlPlugin
 
     /**
      * Url constructor.
-     * @param $config
+     * @param array $config
      */
-    public function __construct($config)
+    public function __construct($config = [])
     {
-        if (isset($config['reuse-query']) && !empty($config['reuse-query'])) {
-            $this->setReuseQuery($config['reuse-query']);
+        if (isset($config['reuse_query']) && !empty($config['reuse_query'])) {
+            $this->setReuseQuery($config['reuse_query']);
         }
     }
 
-    public function fromRoute($route = null, $params = [], $options = [], $reuseMatchedParams = false, $reuseQueriedParams = null)
+    /**
+     * @inheritdoc
+     */
+    public function fromRoute($route = null, $params = [], $options = [], $reuseMatchedParams = false)
     {
         $controller = $this->getController();
         if (!$controller instanceof InjectApplicationEventInterface) {
@@ -40,21 +43,19 @@ class Url extends UrlPlugin
 
         if (3 == func_num_args() && is_bool($options)) {
             $reuseMatchedParams = $options;
-            $reuseQueriedParams = null;
-            $options = [];
-        }
-        if (4 == func_num_args() && is_bool($options)) {
-            $reuseQueriedParams = $reuseMatchedParams;
-            $reuseMatchedParams = $options;
             $options = [];
         }
 
-        if ($reuseQueriedParams === null) {
+        if (isset($options['reuse_queried_params'])) {
+            $reuseQueriedParams = (bool)$options['reuse_queried_params'];
+        } else {
             $reuseQueriedParams = $this->isReuseQuery();
         }
-        $query = $controller->getRequest()->getQuery()->toArray();
-        if ($reuseQueriedParams && $query) {
-            $options = ArrayUtils::merge(['query' => $query], $options);
+        if ($reuseQueriedParams) {
+            $query = $controller->getRequest()->getQuery()->toArray();
+            if (count($query) > 0) {
+                $options = ArrayUtils::merge(['query' => $query], $options);
+            }
         }
 
         return parent::fromRoute($route, $params, $options, $reuseMatchedParams);

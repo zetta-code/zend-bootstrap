@@ -1,7 +1,7 @@
 <?php
 /**
- * @link      http://github.com/zetta-repo/zend-bootstrap for the canonical source repository
- * @copyright Copyright (c) 2017 Zetta Code
+ * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @copyright Copyright (c) 2018 Zetta Code
  */
 
 namespace Zetta\ZendBootstrap\Service;
@@ -11,25 +11,24 @@ use Zend\ServiceManager\Factory\FactoryInterface;
 
 class ThumbnailFactory implements FactoryInterface
 {
+    /**
+     * @inheritdoc
+     */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $config = $container->get('Configuration');
-        $config = isset($config['zend-boostrap']) ? $config['zend-boostrap'] : [];
-        $thumbnailConfig = isset($config['thumbnail']) ? $config['thumbnail'] : [];
+        $config = $container->get('config');
+        $config = isset($config['zend_boostrap']) && isset($config['zend_boostrap']['thumbnail'])
+            ? $config['zend_boostrap']['thumbnail']
+            : [];
 
-        if (isset($thumbnailConfig['defaultPath'])) {
-            $path = $thumbnailConfig['defaultPath'];
-        } else {
-            $path = '';
+        $thumbnail = new Thumbnail(isset($config['defaultPath']) ? $config['defaultPath'] : '');
+        $thumbnail->setGirlThumbnailPath(isset($config['girlPath']) ? $config['girlPath'] : '');
+
+        if (isset($config['width'])) {
+            $thumbnail->setWidth($config['width']);
         }
-        $thumbnail = new Thumbnail($path);
-
-        if (isset($thumbnailConfig['width'])) {
-            $thumbnail->setWidth($thumbnailConfig['width']);
-        }
-
-        if (isset($thumbnailConfig['height'])) {
-            $thumbnail->setHeight($thumbnailConfig['height']);
+        if (isset($config['height'])) {
+            $thumbnail->setHeight($config['height']);
         }
 
         return $thumbnail;

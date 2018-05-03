@@ -1,19 +1,19 @@
 <?php if ($this->pageCount): ?>
-    <div class="text-center">
-        <ul class="pagination">
+    <nav aria-label="<?php echo $this->translate('Page navigation'); ?>">
+        <ul class="pagination pagination-sm justify-content-center mb-0">
             <!-- First page link -->
             <?php
             if (isset($this->previous)):
                 $options['query']['page'] = $this->first;
-            ?>
-                <li>
-                    <a href="<?php echo $this->url($route, $params, $options, $reuseMatchedParams); ?>">
+                ?>
+                <li class="page-item">
+                    <a class="page-link" href="<?php echo $this->url($route, $params, $options, $reuseMatchedParams); ?>">
                         <i class="fa fa-fw fa-angle-double-left"></i>
                     </a>
                 </li>
             <?php else: ?>
-                <li class="disabled">
-                    <span>
+                <li class="page-item disabled">
+                    <span class="page-link">
                         <i class="fa fa-fw fa-angle-double-left"></i>
                     </span>
                 </li>
@@ -23,14 +23,14 @@
             if (isset($this->previous)):
                 $options['query']['page'] = $this->previous;
                 ?>
-                <li>
-                    <a href="<?php echo $this->url($route, $params, $options, $reuseMatchedParams); ?>">
+                <li class="page-item">
+                    <a class="page-link" href="<?php echo $this->url($route, $params, $options, $reuseMatchedParams); ?>">
                         <i class="fa fa-fw fa-angle-left"></i>
                     </a>
                 </li>
             <?php else: ?>
-                <li class="disabled">
-                    <span>
+                <li class="page-item disabled">
+                    <span class="page-link">
                         <i class="fa fa-fw fa-angle-left"></i>
                     </span>
                 </li>
@@ -41,14 +41,14 @@
                 if ($page != $this->current):
                     $options['query']['page'] = $page;
                     ?>
-                    <li>
-                        <a href="<?php echo $this->url($route, $params, $options, $reuseMatchedParams); ?>">
+                    <li class="page-item">
+                        <a class="page-link" href="<?php echo $this->url($route, $params, $options, $reuseMatchedParams); ?>">
                             <?php echo $page; ?>
                         </a>
                     </li>
                 <?php else: ?>
-                    <li class="active">
-                        <a href="#"><?php echo $page; ?></a>
+                    <li class="page-item active">
+                        <a class="page-link" href="#"><?php echo $page; ?></a>
                     </li>
                 <?php endif; ?>
             <?php endforeach; ?>
@@ -57,15 +57,15 @@
             <?php
             if (isset($this->next)):
                 $options['query']['page'] = $this->next;
-            ?>
-                <li>
-                    <a href="<?php echo $this->url($route, $params, $options, $reuseMatchedParams); ?>">
+                ?>
+                <li class="page-item">
+                    <a class="page-link" href="<?php echo $this->url($route, $params, $options, $reuseMatchedParams); ?>">
                         <i class="fa fa-fw fa-angle-right"></i>
                     </a>
                 </li>
             <?php else:?>
-                <li class="disabled">
-                    <span>
+                <li class="page-item disabled">
+                    <span class="page-link">
                         <i class="fa fa-fw fa-angle-right"></i>
                     </span>
                 </li>
@@ -75,19 +75,19 @@
             <?php
             if (isset($this->next)):
                 $options['query']['page'] = $this->last;
-            ?>
-                <li>
-                    <a href="<?php echo $this->url($route, $params, $options, $reuseMatchedParams); ?>">
+                ?>
+                <li class="page-item">
+                    <a class="page-link" href="<?php echo $this->url($route, $params, $options, $reuseMatchedParams); ?>">
                         <i class="fa fa-fw fa-angle-double-right"></i>
                     </a>
                 </li>
             <?php else: ?>
-                <li class="disabled">
-                    <span>
+                <li class="page-item disabled">
+                    <span class="page-link">
                         <i class="fa fa-fw fa-angle-double-right"></i>
                     </span>
                 </li>
             <?php endif; ?>
         </ul>
-    </div>
+    </nav>
 <?php endif; ?>

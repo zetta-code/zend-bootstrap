@@ -1,27 +1,25 @@
 <?php
 /**
- * @link      http://github.com/zetta-repo/zend-bootstrap for the canonical source repository
- * @copyright Copyright (c) 2017 Zetta Code
+ * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @copyright Copyright (c) 2018 Zetta Code
  */
 
 namespace Zetta\ZendBootstrap\Controller\Plugin\Service;
 
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Zetta\ZendBootstrap\Controller\Plugin\Mutex;
 
 class MutexFactory implements FactoryInterface
 {
     /**
-     * @param ContainerInterface $container
-     * @param string $requestedName
-     * @param array|null $options
-     * @return Mutex
+     * @inheritdoc
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $configuration = $container->get('Configuration');
-        $config = isset($configuration['mutex']) ? $configuration['mutex'] : [];
-        return new Mutex($config);
+        $config = $container->get('config');
+        $config = isset($config['zend_boostrap']) && isset($config['zend_boostrap']['mutex'])
+            ? $config['zend_boostrap']['mutex']
+            : [];
+        return new $requestedName($config);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 /**
- * @link      http://github.com/zetta-repo/zend-bootstrap for the canonical source repository
- * @copyright Copyright (c) 2017 Zetta Code
+ * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @copyright Copyright (c) 2018 Zetta Code
  */
 
 namespace Zetta\ZendBootstrap\Controller\Plugin;
@@ -66,8 +66,24 @@ class Thumbnail extends AbstractPlugin
     /**
      * @return string
      */
+    public function getGirlThumbnailPath()
+    {
+        return $this->thumbnail->getGirlThumbnailPath();
+    }
+
+    /**
+     * @return string
+     */
     public function getDefaultThumbnail()
     {
         return $this->thumbnail->getDefaultThumbnail();
+    }
+
+    /**
+     * @return string
+     */
+    public function getGirlThumbnail()
+    {
+        return $this->thumbnail->getGirlThumbnail();
     }
 }

@@ -1,7 +1,7 @@
 <?php
 /**
- * @link      http://github.com/zetta-repo/zend-bootstrap for the canonical source repository
- * @copyright Copyright (c) 2017 Zetta Code
+ * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @copyright Copyright (c) 2018 Zetta Code
  */
 
 namespace Zetta\ZendBootstrap\View\Helper;
@@ -9,6 +9,7 @@ namespace Zetta\ZendBootstrap\View\Helper;
 use Zend\Mvc\Controller\Plugin\Params;
 use Zend\Paginator\Paginator as ZendPaginator;
 use Zend\View\Helper\AbstractHelper;
+use Zend\View\Helper\PaginationControl;
 
 class Paginator extends AbstractHelper
 {
@@ -42,12 +43,13 @@ class Paginator extends AbstractHelper
         $this->params = $params;
     }
 
-    public function __invoke(ZendPaginator $paginator = null, $scrollingStyle = 'Sliding', $partial = 'partial/paginator', $params = null)
+    public function __invoke(ZendPaginator $paginator = null, $scrollingStyle = 'sliding', $partial = 'partial/paginator', $params = null)
     {
-        if (count($paginator) != 0) {
-            $paginationControl = $this->getView()->plugin('paginationControl');
+        if (count($paginator) !== 0) {
+            /** @var PaginationControl $paginationControl */
+            $paginationControl = $this->view->plugin('paginationControl');
 
-            if ($params == null) {
+            if ($params === null) {
                 $params = [];
             }
 

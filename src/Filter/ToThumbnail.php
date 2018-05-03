@@ -1,7 +1,7 @@
 <?php
 /**
- * @link      http://github.com/zetta-repo/zend-bootstrap for the canonical source repository
- * @copyright Copyright (c) 2017 Zetta Code
+ * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @copyright Copyright (c) 2018 Zetta Code
  */
 
 namespace Zetta\ZendBootstrap\Filter;
@@ -37,12 +37,14 @@ class ToThumbnail extends AbstractFilter
     /**
      * Constructor
      *
-     * @param array|string $options The target file path or an options array
+     * @param array|string $thumbnailOrOptions The thumbnail or an options array
      */
-    public function __construct($options = [])
+    public function __construct($thumbnailOrOptions = [])
     {
-        if (is_array($options)) {
-            $this->setOptions($options);
+        if (is_array($thumbnailOrOptions)) {
+            $this->setOptions($thumbnailOrOptions);
+        } else {
+            $this->setThumbnail($thumbnailOrOptions);
         }
     }
 
@@ -75,11 +77,7 @@ class ToThumbnail extends AbstractFilter
     }
 
     /**
-     * Returns the result of filtering $value
-     *
-     * @param  mixed $value
-     * @throws Exception\RuntimeException If filtering $value is impossible
-     * @return mixed
+     * @inheritdoc
      */
     public function filter($value)
     {
@@ -138,7 +136,7 @@ class ToThumbnail extends AbstractFilter
                 unlink($targetFile);
             } else {
                 throw new Exception\InvalidArgumentException(
-                    sprintf("File '%s' could not be renamed. It already exists.", $targetFile)
+                    sprintf('File \'%s\' could not be renamed. It already exists.', $targetFile)
                 );
             }
         }
@@ -162,10 +160,14 @@ class ToThumbnail extends AbstractFilter
     {
         ErrorHandler::start();
         $result = rename($sourceFile, $targetFile);
-        $warningException = ErrorHandler::stop();
+        try {
+            $warningException = ErrorHandler::stop();
+        } catch (\ErrorException $ex) {
+            $warningException = $ex;
+        }
         if (!$result || null !== $warningException) {
             throw new Exception\RuntimeException(
-                sprintf("File '%s' could not be renamed. An error occurred while processing the file.", $sourceFile),
+                sprintf('File \'%s\' could not be renamed. An error occurred while processing the file.', $sourceFile),
                 0,
                 $warningException
             );

@@ -1,18 +1,18 @@
 <?php
 /**
- * @link      http://github.com/zetta-repo/zend-bootstrap for the canonical source repository
- * @copyright Copyright (c) 2017 Zetta Code
+ * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @copyright Copyright (c) 2018 Zetta Code
  */
 
 namespace Zetta\ZendBootstrap\View\Helper;
 
 use Traversable;
+use Zend\Stdlib\ArrayUtils;
 use Zend\Stdlib\RequestInterface;
 use Zend\View\Exception;
-use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\Url as UrlHelper;
 
-class Url extends AbstractHelper
+class Url extends UrlHelper
 {
     /**
      * @var RequestInterface
@@ -27,13 +27,14 @@ class Url extends AbstractHelper
     /**
      * Referer constructor.
      * @param RequestInterface $request
+     * @param array $config
      */
-    public function __construct(RequestInterface $request, $config)
+    public function __construct(RequestInterface $request, $config = [])
     {
         $this->request = $request;
 
-        if (isset($config['reuse-query']) && !empty($config['reuse-query'])) {
-            $this->setReuseQuery($config['reuse-query']);
+        if (isset($config['reuse_query']) && !empty($config['reuse_query'])) {
+            $this->setReuseQuery($config['reuse_query']);
         }
     }
 
@@ -44,7 +45,7 @@ class Url extends AbstractHelper
      * @param  bool $reuseMatchedParams Whether to reuse matched parameters
      * @return string Url                         For the link href attribute
      */
-    public function __invoke($name = null, $params = [], $options = [], $reuseMatchedParams = false, $reuseQueriedParams = null)
+    public function __invoke($name = null, $params = [], $options = [], $reuseMatchedParams = false)
     {
         if (null === $this->request) {
             throw new Exception\RuntimeException('No RequestInterface instance provided');
@@ -52,24 +53,22 @@ class Url extends AbstractHelper
 
         if (3 == func_num_args() && is_bool($options)) {
             $reuseMatchedParams = $options;
-            $reuseQueriedParams = null;
-            $options = [];
-        }
-        if (4 == func_num_args() && is_bool($options)) {
-            $reuseQueriedParams = $reuseMatchedParams;
-            $reuseMatchedParams = $options;
             $options = [];
         }
 
-        if ($reuseQueriedParams === null) {
+        if (isset($options['reuse_queried_params'])) {
+            $reuseQueriedParams = (bool)$options['reuse_queried_params'];
+        } else {
             $reuseQueriedParams = $this->isReuseQuery();
         }
-        $query = $this->request->getQuery()->toArray();
-        if ($reuseQueriedParams && $query) {
-            $options = array_merge(['query' => $query], $options);
+        if ($reuseQueriedParams) {
+            $query = $this->request->getQuery()->toArray();
+            if (count($query) > 0) {
+                $options = ArrayUtils::merge(['query' => $query], $options);
+            }
         }
 
-        return $this->view->getHelperPluginManager()->get(UrlHelper::class)->__invoke($name, $params, $options, $reuseMatchedParams);
+        return parent::__invoke($name, $params, $options, $reuseMatchedParams);
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 /**
- * @link      http://github.com/zetta-repo/zend-bootstrap for the canonical source repository
- * @copyright Copyright (c) 2017 Zetta Code
+ * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @copyright Copyright (c) 2018 Zetta Code
  */
 
 namespace Zetta\ZendBootstrap\Service;
@@ -12,6 +12,11 @@ class Thumbnail
      * @var string
      */
     protected $defaultThumbnailPath;
+
+    /**
+     * @var string
+     */
+    protected $girlThumbnailPath;
 
     /**
      * @var int
@@ -41,18 +46,11 @@ class Thumbnail
      * @param string $path
      * @param null $width
      * @param null $height
-     * @return resource
+     * @return resource|string
      * @throws \Exception
      */
-    private function makeThumbnail($path, $width = null, $height = null) {
-        if ($width === null) {
-            $width = $this->width;
-        }
-
-        if ($height === null) {
-            $height = $this->height;
-        }
-
+    private function makeThumbnail($path, $width = null, $height = null)
+    {
         //File Resize Crop to Blob All in One
         switch (exif_imagetype($path)) {
             case IMAGETYPE_GIF :
@@ -65,8 +63,19 @@ class Thumbnail
                 $image = imagecreatefrompng($path);
                 break;
             default :
-                throw new \Exception('Invalid image type');
+                if ('image/svg+xml' === mime_content_type($path)) {
+                    return 'image/svg+xml';
+                } else {
+                    throw new \Exception('Invalid image type');
+                }
         }
+        if ($width === null) {
+            $width = $this->width;
+        }
+        if ($height === null) {
+            $height = $this->height;
+        }
+
         $originalWidth = imagesx($image);
         $originalHeight = imagesy($image);
         $originalAspect = $originalWidth / $originalHeight;
@@ -94,7 +103,7 @@ class Thumbnail
             $newWidth, $newHeight,
             $originalWidth, $originalHeight
         );
-        imagesavealpha($thumbnail,true);
+        imagesavealpha($thumbnail, true);
         return $thumbnail;
     }
 
@@ -104,6 +113,7 @@ class Thumbnail
      * @param null $width
      * @param null $height
      * @return null|string
+     * @throws \Exception
      */
     public function process($path, $target = null, $width = null, $height = null)
     {
@@ -112,10 +122,12 @@ class Thumbnail
         if ($target === null) {
             ob_start();
             imagepng($thumbnail, null, 9, PNG_ALL_FILTERS);
-            $return = 'data:image/png;base64,' .base64_encode(ob_get_contents());
+            $return = 'data:image/png;base64,' . base64_encode(ob_get_contents());
             ob_end_clean();
         } else {
-            imagepng($thumbnail, $target, 9, PNG_ALL_FILTERS);
+            if ($thumbnail !== 'image/svg+xml') {
+                imagepng($thumbnail, $target, 9, PNG_ALL_FILTERS);
+            }
             $return = $target;
         }
 
@@ -124,6 +136,7 @@ class Thumbnail
     }
 
     /**
+     * Get the Thumbnail defaultThumbnailPath
      * @return string
      */
     public function getDefaultThumbnailPath()
@@ -132,6 +145,7 @@ class Thumbnail
     }
 
     /**
+     * Set the Thumbnail defaultThumbnailPath
      * @param string $defaultThumbnailPath
      * @return Thumbnail
      */
@@ -142,6 +156,27 @@ class Thumbnail
     }
 
     /**
+     * Get the Thumbnail girlThumbnailPath
+     * @return string
+     */
+    public function getGirlThumbnailPath()
+    {
+        return $this->girlThumbnailPath;
+    }
+
+    /**
+     * Set the Thumbnail girlThumbnailPath
+     * @param string $girlThumbnailPath
+     * @return Thumbnail
+     */
+    public function setGirlThumbnailPath($girlThumbnailPath)
+    {
+        $this->girlThumbnailPath = $girlThumbnailPath;
+        return $this;
+    }
+
+    /**
+     * Get the Thumbnail width
      * @return int
      */
     public function getWidth()
@@ -150,6 +185,7 @@ class Thumbnail
     }
 
     /**
+     * Set the Thumbnail width
      * @param int $width
      * @return Thumbnail
      */
@@ -160,6 +196,7 @@ class Thumbnail
     }
 
     /**
+     * Get the Thumbnail height
      * @return int
      */
     public function getHeight()
@@ -168,6 +205,7 @@ class Thumbnail
     }
 
     /**
+     * Set the Thumbnail height
      * @param int $height
      * @return Thumbnail
      */
@@ -178,9 +216,20 @@ class Thumbnail
     }
 
     /**
-     * @return string
+     * @return null|string
+     * @throws \Exception
      */
-    public function getDefaultThumbnail() {
+    public function getDefaultThumbnail()
+    {
         return $this->process($this->defaultThumbnailPath);
+    }
+
+    /**
+     * @return null|string
+     * @throws \Exception
+     */
+    public function getGirlThumbnail()
+    {
+        return $this->process($this->girlThumbnailPath);
     }
 }

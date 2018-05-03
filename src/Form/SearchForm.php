@@ -1,7 +1,7 @@
 <?php
 /**
- * @link      http://github.com/zetta-repo/zend-bootstrap for the canonical source repository
- * @copyright Copyright (c) 2017 Zetta Code
+ * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @copyright Copyright (c) 2018 Zetta Code
  */
 
 namespace Zetta\ZendBootstrap\Form;
@@ -14,13 +14,18 @@ use Zend\Validator;
 
 class SearchForm extends Form
 {
-    public function __construct()
+    /**
+     * SearchForm constructor.
+     * @inheritdoc
+     */
+    public function __construct($name = 'search', $options = [])
     {
-        parent::__construct('search');
+        parent::__construct($name);
         $this->setAttribute('method', 'get');
         $this->setAttribute('class', 'form-inline');
         $this->setAttribute('role', 'form');
-        $this->setLabel('Search');
+        $this->setAttribute('novalidate', true);
+        $this->setLabel(_('Search'));
 
         $this->add([
             'name' => 'q',
@@ -31,11 +36,12 @@ class SearchForm extends Form
         ]);
 
         $this->add([
-            'name' => 'submit',
+            'name' => 'submit-btn',
             'type' => Element\Submit::class,
             'attributes' => [
-                'class' => 'btn btn-default',
+                'class' => 'btn btn-outline-secondary',
                 'value' => '<i class="fa fa-search"></i>',
+                'id' => $name . '-submit',
             ],
         ]);
 

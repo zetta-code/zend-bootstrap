@@ -1,13 +1,12 @@
 <?php
 /**
- * @link      http://github.com/zetta-repo/zend-bootstrap for the canonical source repository
- * @copyright Copyright (c) 2017 Zetta Code
+ * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @copyright Copyright (c) 2018 Zetta Code
  */
 
 namespace Zetta\ZendBootstrap;
 
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
-use Zend\Mvc\Controller\Plugin\Url;
 use Zend\ServiceManager\Factory\InvokableFactory;
 use Zend\View\Helper\Navigation\Menu;
 use Zetta\ZendBootstrap\Filter\ToThumbnail;
@@ -94,12 +93,18 @@ class ConfigProvider implements ConfigProviderInterface
     {
         return [
             'aliases' => [
+                'formmulticheckbox' => Form\View\Helper\FormMultiCheckbox::class,
+                'formradio' => Form\View\Helper\FormRadio::class,
                 'zettaFlashMessenger' => View\Helper\FlashMessenger::class,
+                'zettaFormMultiCheckbox' => Form\View\Helper\FormMultiCheckbox::class,
+                'zettaFormRadio' => Form\View\Helper\FormRadio::class,
                 'zettaFormRow' => Form\View\Helper\FormRow::class,
                 'zettaPaginator' => View\Helper\Paginator::class,
                 'zettaReferer' => View\Helper\Referer::class,
             ],
             'factories' => [
+                Form\View\Helper\FormMultiCheckbox::class => InvokableFactory::class,
+                Form\View\Helper\FormRadio::class => InvokableFactory::class,
                 Form\View\Helper\FormRow::class => InvokableFactory::class,
                 View\Helper\FlashMessenger::class => InvokableFactory::class,
                 View\Helper\Paginator::class => View\Helper\Service\PaginatorFactory::class,
@@ -118,8 +123,8 @@ class ConfigProvider implements ConfigProviderInterface
     {
         return [
             'flashmessenger' => [
-                'message_open_format' => '<div%s><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><ul><li>',
-                'message_close_string' => '</li></ul></div>',
+                'message_open_format' => '<div%s><ul><li>',
+                'message_close_string' => '</li></ul><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>',
                 'message_separator_string' => '</li><li>'
             ]
         ];

@@ -1,7 +1,7 @@
 <?php
 /**
- * @link      http://github.com/zetta-repo/zend-bootstrap for the canonical source repository
- * @copyright Copyright (c) 2017 Zetta Code
+ * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @copyright Copyright (c) 2018 Zetta Code
  */
 
 namespace Zetta\ZendBootstrap\Filter;
@@ -14,9 +14,6 @@ class ToThumbnailFactory implements FactoryInterface
 {
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $thumbnail = $container->get(Thumbnail::class);
-        $toThumbnail = new ToThumbnail();
-        $toThumbnail->setThumbnail($thumbnail);
-        return $toThumbnail;
+        return new $requestedName($container->get(Thumbnail::class));
     }
 }

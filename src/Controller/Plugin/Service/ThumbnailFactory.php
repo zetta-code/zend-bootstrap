@@ -1,26 +1,22 @@
 <?php
 /**
- * @link      http://github.com/zetta-repo/zend-bootstrap for the canonical source repository
- * @copyright Copyright (c) 2017 Zetta Code
+ * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @copyright Copyright (c) 2018 Zetta Code
  */
 
 namespace Zetta\ZendBootstrap\Controller\Plugin\Service;
 
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Zetta\ZendBootstrap\Controller\Plugin\Thumbnail;
-use Zetta\ZendBootstrap\Service\Thumbnail as ThumbnailService;
+use Zetta\ZendBootstrap\Service\Thumbnail;
 
 class ThumbnailFactory implements FactoryInterface
 {
     /**
-     * @param ContainerInterface $container
-     * @param string $requestedName
-     * @param array|null $options
-     * @return Thumbnail
+     * @inheritdoc
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        return new Thumbnail($container->get(ThumbnailService::class));
+        return new $requestedName($container->get(Thumbnail::class));
     }
 }

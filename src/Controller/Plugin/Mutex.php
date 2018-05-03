@@ -1,7 +1,7 @@
 <?php
 /**
- * @link      http://github.com/zetta-repo/zend-bootstrap for the canonical source repository
- * @copyright Copyright (c) 2017 Zetta Code
+ * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @copyright Copyright (c) 2018 Zetta Code
  */
 
 namespace Zetta\ZendBootstrap\Controller\Plugin;
@@ -11,7 +11,7 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 class Mutex extends AbstractPlugin
 {
     protected $dir = './data/lock/';
-    protected $files = []; // resource to lock
+    protected $files = []; // resources to lock
     protected $owns = [];
 
     /**
@@ -29,17 +29,20 @@ class Mutex extends AbstractPlugin
         }
     }
 
-    // have we locked resource
     /**
+     * Ceate a new resource or get exisitng with same key
      * @param $key
      */
     protected function init($key)
     {
-        // create a new resource or get exisitng with same key
-        $this->files[$key] = fopen($this->dir . $key . '.lockfile', 'w+');
+        if (!isset($this->files[$key])) {
+            $this->files[$key] = fopen($this->dir . $key . '.lockfile', 'w+');
+            $this->owns[$key] = false;
+        }
     }
 
     /**
+     * Lock resource
      * @param $key
      * @return bool
      */
@@ -48,12 +51,12 @@ class Mutex extends AbstractPlugin
         $this->init($key);
 
         if (!flock($this->files[$key], LOCK_EX)) { //failed
-            error_log("ExclusiveLock::acquire_lock FAILED to acquire lock [$key]");
+            error_log('ExclusiveLock::acquire_lock FAILED to acquire lock [' . $key . ']');
             return false;
         } else {
             ftruncate($this->files[$key], 0); // truncate file
             // write something to just help debugging
-            fwrite($this->files[$key], "Locked\n");
+            fwrite($this->files[$key], 'Locked' . PHP_EOL);
             fflush($this->files[$key]);
 
             $this->owns[$key] = true;
@@ -69,17 +72,17 @@ class Mutex extends AbstractPlugin
     {
         if (isset($this->owns[$key]) && $this->owns[$key] === true) {
             if (!flock($this->files[$key], LOCK_UN)) { //failed
-                error_log("ExclusiveLock::lock FAILED to release lock [$key]");
+                error_log('ExclusiveLock::lock FAILED to release lock [' . $key . ']');
                 return false;
             }
             ftruncate($this->files[$key], 0); // truncate file
             // write something to just help debugging
-            fwrite($this->files[$key], "Unlocked\n");
+            fwrite($this->files[$key], 'Unlocked' . PHP_EOL);
             fflush($this->files[$key]);
             $this->owns[$key] = false;
             return true;
         } else {
-            error_log("ExclusiveLock::unlock called on [$key] but its not acquired by caller");
+            error_log('ExclusiveLock::unlock called on [' . $key . '] but its not acquired by caller');
             return false;
         }
     }

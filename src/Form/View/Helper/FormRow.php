@@ -1,7 +1,7 @@
 <?php
 /**
- * @link      http://github.com/zetta-repo/zend-bootstrap for the canonical source repository
- * @copyright Copyright (c) 2017 Zetta Code
+ * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @copyright Copyright (c) 2018 Zetta Code
  */
 
 namespace Zetta\ZendBootstrap\Form\View\Helper;
@@ -16,18 +16,32 @@ use Zend\Form\View\Helper\FormRow as FormRowHelper;
 class FormRow extends FormRowHelper
 {
     /**
+     * @inheritdoc
+     */
+    protected $inputErrorClass = 'is-invalid';
+
+    /**
+     * The attributes for the row errors
+     *
+     * @var array
+     */
+    protected $elementErrorsAttributes = [
+        'class' => 'invalid-feedback'
+    ];
+    
+    /**
      * @param ElementInterface $element
      * @param null $labelPosition
      * @return string
      */
     public function render(ElementInterface $element, $labelPosition = null)
     {
-        $escapeHtmlHelper = $this->getEscapeHtmlHelper();
-        $labelHelper = $this->getLabelHelper();
-        $elementHelper = $this->getElementHelper();
+        $escapeHtmlHelper    = $this->getEscapeHtmlHelper();
+        $labelHelper         = $this->getLabelHelper();
+        $elementHelper       = $this->getElementHelper();
         $elementErrorsHelper = $this->getElementErrorsHelper();
 
-        $label = $element->getLabel();
+        $label           = $element->getLabel();
         $inputErrorClass = $this->getInputErrorClass();
 
         if (is_null($labelPosition)) {
@@ -51,14 +65,32 @@ class FormRow extends FormRowHelper
 
         if ($this->partial) {
             $vars = [
-                'element' => $element,
-                'label' => $label,
+                'element'         => $element,
+                'label'           => $label,
                 'labelAttributes' => $this->labelAttributes,
-                'labelPosition' => $labelPosition,
-                'renderErrors' => $this->renderErrors,
+                'labelPosition'   => $labelPosition,
+                'renderErrors'    => $this->renderErrors,
             ];
 
             return $this->view->render($this->partial, $vars);
+        }
+
+        if ($this->renderErrors) {
+            if (!empty($element->getOption('input_error_class'))) {
+                $this->setInputErrorClass($element->getOption('input_error_class'));
+            }
+
+            if (!empty($element->getOption('element_errors_attributes'))) {
+                $elementErrorsAttributes = $element->getOption('element_errors_attributes');
+            } else {
+                $elementErrorsAttributes = $this->getElementErrorsAttributes();
+            }
+
+            $elementErrors = $elementErrorsHelper
+                ->setMessageOpenFormat('<div%s><div>')
+                ->setMessageSeparatorString('</div><div>')
+                ->setMessageCloseString('</div></div>')
+                ->render($element, $elementErrorsAttributes);
         }
 
         $divOption = $element->getOption('div');
@@ -78,20 +110,14 @@ class FormRow extends FormRowHelper
             $div = '%s';
         }
 
-        if ($this->renderErrors) {
-            $elementErrors = $elementErrorsHelper
-                ->setMessageOpenFormat('<span class="help-block">')
-                ->setMessageSeparatorString('</span><span class="help-block">')
-                ->setMessageCloseString('</span>')
-                ->render($element, array('class' => 'help-block'));
-        } else {
-            $elementErrors = '';
-        }
-
-        $elementString = $elementHelper->render($element);
-
         // hidden elements do not need a <label> -https://github.com/zendframework/zf2/issues/5607
         $type = $element->getAttribute('type');
+        if ($type === 'multi_checkbox'
+            || $type === 'radio') {
+            $this->getView()->plugin('form'.str_replace('_', '', $type))->setSeparator('</div><div class="' . $divClass . '">');
+        }
+        $elementString = $elementHelper->render($element);
+
         if (isset($label) && '' !== $label && $type !== 'hidden') {
             $labelAttributes = [];
 
@@ -115,9 +141,10 @@ class FormRow extends FormRowHelper
                 || $element instanceof Captcha
             ) {
                 $markup = sprintf(
-                    '<fieldset><legend>%s</legend>%s</fieldset>',
+                    '<div class="form-group"><label>%s</label><div' . (count($element->getMessages()) > 0 ? ' class="form-check-is-invalid"' : '') .'>%s%s</div></div>',
                     $label,
-                    sprintf($div, $elementString . $elementErrors)
+                    sprintf($div, $elementString),
+                    $elementErrors
                 );
             } else {
                 $horizontalClass = $element->getOption('horizontal_class');
@@ -173,5 +200,27 @@ class FormRow extends FormRowHelper
         }
 
         return $markup;
+    }
+
+    /**
+     * Set the attributes for the row errors
+     *
+     * @param  array $elementErrorsAttributes
+     * @return FormRow
+     */
+    public function setElementErrorsAttributes($elementErrorsAttributes)
+    {
+        $this->elementErrorsAttributes = $elementErrorsAttributes;
+        return $this;
+    }
+
+    /**
+     * Get the attributes for the row $erros
+     *
+     * @return array
+     */
+    public function getElementErrorsAttributes()
+    {
+        return $this->elementErrorsAttributes;
     }
 }
