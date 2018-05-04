@@ -26,13 +26,15 @@
     "zendframework/zend-stdlib": "^3.0"
   },
   "require-dev": {
-    "zendframework/zend-mvc": "^3.0",
+    "jenssegers/date": "^3.2",
+    "zendframework/zend-captcha": "^2.8",
     "zendframework/zend-form": "^2.9",
+    "zendframework/zend-mail": "^2.7",
+    "zendframework/zend-mvc": "^3.0",
+    "zendframework/zend-mvc-plugin-flashmessenger": "^1.0",
     "zendframework/zend-navigation": "^2.8",
     "zendframework/zend-paginator": "^2.7",
-    "zendframework/zend-mail": "^2.7",
-    "jenssegers/date": "^3.2",
-    "zendframework/zend-mvc-plugin-flashmessenger": "^1.0"
+    "zendframework/zendservice-recaptcha": "^3.0"
   },
   "extra": {
     "zf": {

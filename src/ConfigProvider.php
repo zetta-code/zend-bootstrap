@@ -28,6 +28,7 @@ class ConfigProvider implements ConfigProviderInterface
         return [
             'controller_plugins' => $this->getControllerPluginConfig(),
             'filters' => $this->getFilterConfig(),
+            'form_elements' => $this->getFormElementConfig(),
             'view_helpers' => $this->getViewHelpers(),
             'view_helper_config' => $this->getViewHelperConfig(),
             'navigation_helpers' => [
@@ -80,6 +81,20 @@ class ConfigProvider implements ConfigProviderInterface
             ],
             'factories' => [
                 Filter\ToThumbnail::class => Filter\ToThumbnailFactory::class
+            ],
+        ];
+    }
+
+    /**
+     * Return component form element configuration.
+     *
+     * @return array
+     */
+    public function getFormElementConfig()
+    {
+        return [
+            'factories' => [
+                'recaptcha' => Form\Element\ReCaptchaFactory::class
             ],
         ];
     }
