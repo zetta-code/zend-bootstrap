@@ -90,7 +90,8 @@ $user = $this->identity();
 if ($user) {
     if (!$page->get('no-image')) {
         $label = '<span class="user-name">' . explode(' ', ($user->getName() ?: $user->getUsername()), 2)[0] . '</span>';
-        $html .= '<img class="user-avatar" src="' . $this->basePath($user->getAvatar()) . '" alt="@' . $user->getUsername() . '">';
+        $html .= '<img class="user-avatar" src="' . $this->basePath($user->getAvatar())
+            . '" alt="@' . ($user->getUsername() ? '@' . $user->getUsername() : $this->translate('Avatar')) . '">';
     } else {
         $label = '<div class="user-name">' . explode(' ', ($user->getName() ?: $user->getUsername()), 2)[0] . '</div>';
         $label .= '<div class="user-position online">' . $this->translate('Available') . '</div>';
