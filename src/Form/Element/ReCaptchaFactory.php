@@ -7,12 +7,9 @@
 namespace Zetta\ZendBootstrap\Form\Element;
 
 use Interop\Container\ContainerInterface;
-use Zend\Authentication\AuthenticationService;
-use Zend\Form\Element\Captcha;
-use Zend\Permissions\Acl\Role\GenericRole;
-use Zend\ServiceManager\Factory\FactoryInterface;
-use Zetta\ZendAuthentication\Permissions\Acl\Acl;
 use Zend\Captcha\ReCaptcha as ZendReCaptcha;
+use Zend\Form\Element\Captcha;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
 class ReCaptchaFactory implements FactoryInterface
 {

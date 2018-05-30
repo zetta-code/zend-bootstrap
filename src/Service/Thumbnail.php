@@ -19,6 +19,11 @@ class Thumbnail
     protected $girlThumbnailPath;
 
     /**
+     * @var string
+     */
+    protected $target = null;
+
+    /**
      * @var int
      */
     protected $width;
@@ -47,7 +52,6 @@ class Thumbnail
      * @param null $width
      * @param null $height
      * @return resource|string
-     * @throws \Exception
      */
     private function makeThumbnail($path, $width = null, $height = null)
     {
@@ -113,7 +117,6 @@ class Thumbnail
      * @param null $width
      * @param null $height
      * @return null|string
-     * @throws \Exception
      */
     public function process($path, $target = null, $width = null, $height = null)
     {
@@ -125,6 +128,14 @@ class Thumbnail
             $return = 'data:image/png;base64,' . base64_encode(ob_get_contents());
             ob_end_clean();
         } else {
+            if (preg_match('/^data:([a-z]+\/[a-z]+(;[a-z\-]+\=[a-z\-]+)?)?(;base64)?,[a-z0-9\!\$\&\'\,\(\)\*\+\,\;\=\-\.\_\~\:\@\/\?\%\s]*$/i', trim($target))) {
+                $info = pathinfo($this->getTarget());
+                $newTarget = $info['dirname'] . DIRECTORY_SEPARATOR . $info['filename'] . str_replace('.', '_', uniqid('_', true));
+                if (isset($info['extension'])) {
+                    $newTarget .= '.' . $info['extension'];
+                }
+                $target = $newTarget;
+            }
             if ($thumbnail !== 'image/svg+xml') {
                 imagepng($thumbnail, $target, 9, PNG_ALL_FILTERS);
             }
@@ -172,6 +183,26 @@ class Thumbnail
     public function setGirlThumbnailPath($girlThumbnailPath)
     {
         $this->girlThumbnailPath = $girlThumbnailPath;
+        return $this;
+    }
+
+    /**
+     * Get the Thumbnail target
+     * @return string
+     */
+    public function getTarget()
+    {
+        return $this->target;
+    }
+
+    /**
+     * Set the Thumbnail target
+     * @param string $target
+     * @return Thumbnail
+     */
+    public function setTarget($target)
+    {
+        $this->target = $target;
         return $this;
     }
 
