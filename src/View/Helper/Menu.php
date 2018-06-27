@@ -353,6 +353,24 @@ class Menu extends ZendMenu
     }
 
     /**
+     * Normalizes given render options.
+     *
+     * @param  array $options [optional] options to normalize
+     * @return array
+     */
+    protected function normalizeOptions(array $options = [])
+    {
+        $options = parent::normalizeOptions($options);
+        if (isset($options['subLiClassLevel0']) && $options['subLiClassLevel0'] !== null) {
+            $options['subLiClassLevel0'] = (string) $options['subLiClassLevel0'];
+        } else {
+            $options['subLiClassLevel0'] = $this->getSubLiClassLevel0();
+        }
+
+        return $options;
+    }
+
+    /**
      * Get the Menu defaultLiClass
      * @return string
      */
