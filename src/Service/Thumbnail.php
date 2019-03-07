@@ -6,6 +6,8 @@
 
 namespace Zetta\ZendBootstrap\Service;
 
+use Exception;
+
 class Thumbnail
 {
     /**
@@ -70,7 +72,7 @@ class Thumbnail
                 if ('image/svg+xml' === mime_content_type($path)) {
                     return 'image/svg+xml';
                 } else {
-                    throw new \Exception('Invalid image type');
+                    throw new Exception('Invalid image type');
                 }
         }
         if ($width === null) {
@@ -248,7 +250,7 @@ class Thumbnail
 
     /**
      * @return null|string
-     * @throws \Exception
+     * @throws Exception
      */
     public function getDefaultThumbnail()
     {
@@ -257,7 +259,7 @@ class Thumbnail
 
     /**
      * @return null|string
-     * @throws \Exception
+     * @throws Exception
      */
     public function getGirlThumbnail()
     {

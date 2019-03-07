@@ -28,7 +28,7 @@ class FormRow extends FormRowHelper
     protected $elementErrorsAttributes = [
         'class' => 'invalid-feedback'
     ];
-    
+
     /**
      * @param ElementInterface $element
      * @param null $labelPosition
@@ -36,12 +36,12 @@ class FormRow extends FormRowHelper
      */
     public function render(ElementInterface $element, $labelPosition = null)
     {
-        $escapeHtmlHelper    = $this->getEscapeHtmlHelper();
-        $labelHelper         = $this->getLabelHelper();
-        $elementHelper       = $this->getElementHelper();
+        $escapeHtmlHelper = $this->getEscapeHtmlHelper();
+        $labelHelper = $this->getLabelHelper();
+        $elementHelper = $this->getElementHelper();
         $elementErrorsHelper = $this->getElementErrorsHelper();
 
-        $label           = $element->getLabel();
+        $label = $element->getLabel();
         $inputErrorClass = $this->getInputErrorClass();
 
         if (is_null($labelPosition)) {
@@ -65,11 +65,11 @@ class FormRow extends FormRowHelper
 
         if ($this->partial) {
             $vars = [
-                'element'         => $element,
-                'label'           => $label,
+                'element' => $element,
+                'label' => $label,
                 'labelAttributes' => $this->labelAttributes,
-                'labelPosition'   => $labelPosition,
-                'renderErrors'    => $this->renderErrors,
+                'labelPosition' => $labelPosition,
+                'renderErrors' => $this->renderErrors,
             ];
 
             return $this->view->render($this->partial, $vars);
@@ -114,7 +114,7 @@ class FormRow extends FormRowHelper
         $type = $element->getAttribute('type');
         if ($type === 'multi_checkbox'
             || $type === 'radio') {
-            $this->getView()->plugin('form'.str_replace('_', '', $type))->setSeparator('</div><div class="' . $divClass . '">');
+            $this->getView()->plugin('form' . str_replace('_', '', $type))->setSeparator('</div><div class="' . $divClass . '">');
         }
         $elementString = $elementHelper->render($element);
 
@@ -141,7 +141,7 @@ class FormRow extends FormRowHelper
                 || $element instanceof Captcha
             ) {
                 $markup = sprintf(
-                    '<div class="form-group"><label>%s</label><div' . (count($element->getMessages()) > 0 ? ' class="form-check-is-invalid"' : '') .'>%s%s</div></div>',
+                    '<div class="form-group"><label>%s</label><div' . (count($element->getMessages()) > 0 ? ' class="form-check-is-invalid"' : '') . '>%s%s</div></div>',
                     $label,
                     sprintf($div, $elementString),
                     $elementErrors
@@ -150,6 +150,7 @@ class FormRow extends FormRowHelper
                 $horizontalClass = $element->getOption('horizontal_class');
                 if (!empty($horizontalClass)) {
                     $elementString = '<div class="' . $horizontalClass . '">' . $elementString . $elementErrors . '</div>';
+                    $elementErrors = '';
                 }
 
                 // Ensure element and label will be separated if element has an `id`-attribute.
@@ -205,7 +206,7 @@ class FormRow extends FormRowHelper
     /**
      * Set the attributes for the row errors
      *
-     * @param  array $elementErrorsAttributes
+     * @param array $elementErrorsAttributes
      * @return FormRow
      */
     public function setElementErrorsAttributes($elementErrorsAttributes)

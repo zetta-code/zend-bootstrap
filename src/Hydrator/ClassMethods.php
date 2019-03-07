@@ -11,11 +11,11 @@ use Zetta\ZendBootstrap\Hydrator\Strategy\DateTimeStrategy;
 class ClassMethods extends \Zend\Hydrator\ClassMethods
 {
     /**
-     * @param bool|true $underscoreSeparatedKeys
+     * @inheritDoc
      */
-    public function __construct($underscoreSeparatedKeys = true)
+    public function __construct($underscoreSeparatedKeys = true, $methodExistsCheck = false)
     {
-        parent::__construct($underscoreSeparatedKeys);
+        parent::__construct($underscoreSeparatedKeys, $methodExistsCheck);
 
         $dateTimeStrategy = new DateTimeStrategy();
         $this->strategies['createdAt'] = $dateTimeStrategy;

@@ -1,13 +1,12 @@
 <?php
 /**
- * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
- * @copyright Copyright (c) 2018 Zetta Code
+ * @link      http://github.com/zetta-repo/zend-bootstrap for the canonical source repository
+ * @copyright Copyright (c) 2017 Zetta Code
  */
 
 namespace Zetta\ZendBootstrap\Controller\Plugin;
 
 use Zend\Mail\Message;
-use Zend\Mail\Transport\TransportInterface;
 use Zend\Mime;
 use Zend\Mvc\Controller\AbstractController;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
@@ -27,21 +26,18 @@ class Email extends AbstractPlugin
     /**
      * @var string
      */
-    protected $encoding = 'utf8';
+    protected $encoding = 'UTF-8';
 
     /**
      * @var AbstractController
      */
     protected $controller;
 
-    /**
-     * @var TransportInterface
-     */
     protected $transport;
 
     /**
      * EmailPlugin constructor.
-     * @param TransportInterface $transport
+     * @param $transport
      * @param array $config
      */
     public function __construct($transport, $config = [])
@@ -50,6 +46,22 @@ class Email extends AbstractPlugin
         $this->transport = $transport;
         $this->fromEmail = $config['from-email'];
         $this->fromName = $config['from-name'];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTransport()
+    {
+        return $this->transport;
+    }
+
+    /**
+     * @param mixed $transport
+     */
+    public function setTransport($transport)
+    {
+        $this->transport = $transport;
     }
 
     public function send($to, $subject, $body)
@@ -64,44 +76,36 @@ class Email extends AbstractPlugin
         $this->getTransport()->send($message);
     }
 
-    /**
-     * @return TransportInterface
-     */
-    public function getTransport()
-    {
-        return $this->transport;
-    }
-
-    /**
-     * @param TransportInterface $transport
-     */
-    public function setTransport($transport)
-    {
-        $this->transport = $transport;
-    }
-
-    function sendEmail($to, $subject, $html, $text, $attachments = null)
+    function sendEmail($to, $subject, $html, $text = null, $attachments = [], $replyTo = false)
     {
         // HTML part
         $htmlPart = new Mime\Part($html);
-        $htmlPart->setEncoding(Mime\Mime::ENCODING_QUOTEDPRINTABLE);
-        $htmlPart->setType(Mime\Mime::TYPE_HTML);
-        // Plain text part
-        $textPart = new Mime\Part($text);
-        $textPart->setEncoding(Mime\Mime::ENCODING_QUOTEDPRINTABLE);
-        $textPart->setType(Mime\Mime::TYPE_TEXT);
+        $htmlPart->setType(Mime\Mime::TYPE_HTML)
+            ->setCharset($this->encoding)
+            ->setEncoding(Mime\Mime::ENCODING_QUOTEDPRINTABLE);
+        if ($text !== null) {
+            // Plain text part
+            $textPart = new Mime\Part($text);
+            $textPart->setType(Mime\Mime::TYPE_TEXT)
+                ->setCharset($this->encoding)
+                ->setEncoding(Mime\Mime::ENCODING_QUOTEDPRINTABLE);
+        } else {
+            $textPart = null;
+        }
 
         $body = new Mime\Message();
-        if ($attachments) {
+        if (count($attachments) > 0) {
             // With attachments, we need a multipart/related email. First part
             // is itself a multipart/alternative message
             $content = new Mime\Message();
-            $content->addPart($textPart);
+            if ($text !== null) {
+                $content->addPart($textPart);
+            }
             $content->addPart($htmlPart);
 
             $contentPart = new Mime\Part($content->generateMessage());
-            $contentPart->setType(Mime\Mime::MULTIPART_ALTERNATIVE);
-            $contentPart->setBoundary($content->getMime()->boundary());
+            $contentPart->setType(Mime\Mime::MULTIPART_ALTERNATIVE)
+                ->setBoundary($content->getMime()->boundary());
 
             $body->addPart($contentPart);
             $messageType = Mime\Mime::MULTIPART_RELATED;
@@ -110,27 +114,37 @@ class Email extends AbstractPlugin
             foreach ($attachments as $thisAttachment) {
                 $attachment = new Mime\Part($thisAttachment['content']);
                 $attachment->filename = $thisAttachment['filename'];
-                $attachment->type = Mime\Mime::TYPE_OCTETSTREAM;
-                $attachment->encoding = Mime\Mime::ENCODING_BASE64;
-                $attachment->disposition = Mime\Mime::DISPOSITION_ATTACHMENT;
+                $attachment->setType(Mime\Mime::TYPE_OCTETSTREAM)
+                    ->setEncoding(Mime\Mime::ENCODING_BASE64)
+                    ->setDisposition(Mime\Mime::DISPOSITION_ATTACHMENT);
 
                 $body->addPart($attachment);
             }
 
         } else {
             // No attachments, just add the two textual parts to the body
-            $body->setParts([$textPart, $htmlPart]);
-            $messageType = Mime\Mime::MULTIPART_ALTERNATIVE;
+            if ($text !== null) {
+                $body->addPart($textPart);
+                $messageType = Mime\Mime::MULTIPART_ALTERNATIVE;
+            } else {
+                $messageType = null;
+            }
+            $body->addPart($htmlPart);
         }
 
         // attach the body to the message and set the content-type
         $message = new Message();
         $message->addTo($to);
-        $message->setEncoding($this->encoding);
-        $message->addFrom($this->fromEmail, $this->fromName);
-        $message->setSubject($subject);
-        $message->setBody($body);
-        $message->getHeaders()->get('content-type')->setType($messageType);
+        if ($replyTo) {
+            $message->addReplyTo($replyTo);
+        }
+        $message->setEncoding($this->encoding)
+            ->addFrom($this->fromEmail, $this->fromName)
+            ->setSubject($subject)
+            ->setBody($body);
+        if ($text !== null) {
+            $message->getHeaders()->get('content-type')->setType($messageType);
+        }
 
         $this->getTransport()->send($message);
     }

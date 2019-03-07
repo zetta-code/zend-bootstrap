@@ -4,15 +4,16 @@
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
-namespace Zetta\ZendBootstrap\Service;
+namespace Zetta\ZendBootstrap\Factory;
 
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
+use Zetta\ZendBootstrap\Service\Thumbnail;
 
 class ThumbnailFactory implements FactoryInterface
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

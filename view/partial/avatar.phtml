@@ -89,8 +89,19 @@ if ($addonLeft) {
 $user = $this->identity();
 if ($user) {
     if (!$page->get('no-image')) {
+        if ($user->getAvatar() !== null) {
+            $avatar = $user->getAvatar();
+        } else {
+            if ($user->getGender() === \Zetta\ZendAuthentication\Entity\Enum\Gender::FEMALE) {
+                $avatar = $this->thumbnail()->getGirlThumbnailPath();
+            } else {
+                $avatar = $this->thumbnail()->getDefaultThumbnailPath();
+            }
+            $avatar = str_replace('./public/', '', $avatar);
+        }
+
         $label = '<span class="user-name">' . explode(' ', ($user->getName() ?: $user->getUsername()), 2)[0] . '</span>';
-        $html .= '<img class="user-avatar" src="' . $this->basePath($user->getAvatar())
+        $html .= '<img class="user-avatar" src="' . $this->basePath($avatar)
             . '" alt="' . ($user->getUsername() ? '@' . $user->getUsername() : $this->translate('Avatar')) . '">';
     } else {
         $label = '<div class="user-name">' . explode(' ', ($user->getName() ?: $user->getUsername()), 2)[0] . '</div>';

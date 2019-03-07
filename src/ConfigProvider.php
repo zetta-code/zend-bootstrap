@@ -31,14 +31,7 @@ class ConfigProvider implements ConfigProviderInterface
             'form_elements' => $this->getFormElementConfig(),
             'view_helpers' => $this->getViewHelpers(),
             'view_helper_config' => $this->getViewHelperConfig(),
-            'navigation_helpers' => [
-                'aliases' => [
-                    Menu::class => View\Helper\Menu::class,
-                ],
-                'factories' => [
-                    View\Helper\Menu::class => InvokableFactory::class
-                ]
-            ],
+            'navigation_helpers' => $this->getNavigationHelpersConfig(),
             'service_manager' => $this->getServiceConfig(),
             'view_manager' => $this->getViewManagerConfig(),
         ];
@@ -55,15 +48,18 @@ class ConfigProvider implements ConfigProviderInterface
             'aliases' => [
                 'email' => Controller\Plugin\Email::class,
                 'mutex' => Controller\Plugin\Mutex::class,
+                'referer' => Controller\Plugin\Referer::class,
+                'settings' => Controller\Plugin\Settings::class,
                 'thumbnail' => Controller\Plugin\Thumbnail::class,
-                'referer' => Controller\Plugin\Referer::class
+                'zettaUrl' => Controller\Plugin\Url::class,
             ],
             'factories' => [
-                Controller\Plugin\Email::class => Controller\Plugin\Service\EmailFactory::class,
-                Controller\Plugin\Mutex::class => Controller\Plugin\Service\MutexFactory::class,
-                Controller\Plugin\Thumbnail::class => Controller\Plugin\Service\ThumbnailFactory::class,
+                Controller\Plugin\Email::class => Controller\Plugin\Factory\EmailFactory::class,
+                Controller\Plugin\Mutex::class => Controller\Plugin\Factory\MutexFactory::class,
                 Controller\Plugin\Referer::class => InvokableFactory::class,
-                Controller\Plugin\Url::class => Controller\Plugin\Service\UrlFactory::class
+                Controller\Plugin\Settings::class => Factory\WithSettingsFactory::class,
+                Controller\Plugin\Thumbnail::class => Factory\WithThumbnailFactory::class,
+                Controller\Plugin\Url::class => Factory\WithUrlConfigFactory::class,
             ],
         ];
     }
@@ -80,7 +76,7 @@ class ConfigProvider implements ConfigProviderInterface
                 'ToThumbnail' => ToThumbnail::class,
             ],
             'factories' => [
-                Filter\ToThumbnail::class => Filter\ToThumbnailFactory::class
+                Filter\ToThumbnail::class => Factory\WithThumbnailFactory::class
             ],
         ];
     }
@@ -116,15 +112,20 @@ class ConfigProvider implements ConfigProviderInterface
                 'zettaFormRow' => Form\View\Helper\FormRow::class,
                 'zettaPaginator' => View\Helper\Paginator::class,
                 'zettaReferer' => View\Helper\Referer::class,
+                'settings' => View\Helper\Settings::class,
+                'thumbnail' => View\Helper\Thumbnail::class,
+                'zettaUrl' => View\Helper\Url::class,
             ],
             'factories' => [
                 Form\View\Helper\FormMultiCheckbox::class => InvokableFactory::class,
                 Form\View\Helper\FormRadio::class => InvokableFactory::class,
                 Form\View\Helper\FormRow::class => InvokableFactory::class,
                 View\Helper\FlashMessenger::class => InvokableFactory::class,
-                View\Helper\Paginator::class => View\Helper\Service\PaginatorFactory::class,
-                View\Helper\Referer::class => View\Helper\Service\RefererFactory::class,
-                View\Helper\Url::class => View\Helper\Service\UrlFactory::class
+                View\Helper\Paginator::class => View\Helper\Factory\PaginatorFactory::class,
+                View\Helper\Referer::class => View\Helper\Factory\RefererFactory::class,
+                View\Helper\Settings::class => Factory\WithSettingsFactory::class,
+                View\Helper\Thumbnail::class => Factory\WithThumbnailFactory::class,
+                View\Helper\Url::class => View\Helper\Factory\UrlFactory::class
             ],
         ];
     }
@@ -146,6 +147,23 @@ class ConfigProvider implements ConfigProviderInterface
     }
 
     /**
+     * Return navigation helpers configuration.
+     *
+     * @return array
+     */
+    public function getNavigationHelpersConfig()
+    {
+        return [
+            'aliases' => [
+                Menu::class => View\Helper\Menu::class,
+            ],
+            'factories' => [
+                View\Helper\Menu::class => InvokableFactory::class
+            ]
+        ];
+    }
+
+    /**
      * Return component service configuration.
      *
      * @return array
@@ -154,7 +172,8 @@ class ConfigProvider implements ConfigProviderInterface
     {
         return [
             'factories' => [
-                Service\Thumbnail::class => Service\ThumbnailFactory::class
+                Service\Settings::class => Factory\SettingsFactory::class,
+                Service\Thumbnail::class => Factory\ThumbnailFactory::class,
             ],
         ];
     }

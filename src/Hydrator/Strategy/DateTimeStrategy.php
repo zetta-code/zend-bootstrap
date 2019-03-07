@@ -6,7 +6,10 @@
 
 namespace Zetta\ZendBootstrap\Hydrator\Strategy;
 
+use DateTime;
+use DateTimeInterface;
 use Jenssegers\Date\Date;
+use Zend\Hydrator\Strategy\Exception;
 
 class DateTimeStrategy extends DateStrategy
 {
@@ -50,7 +53,7 @@ class DateTimeStrategy extends DateStrategy
      */
     public function extract($value)
     {
-        if ($value != null) {
+        if ($value instanceof DateTimeInterface) {
             return $value->format($this->getDateFormat());
         }
 
@@ -62,15 +65,20 @@ class DateTimeStrategy extends DateStrategy
      */
     public function hydrate($value)
     {
-        if ($value instanceof \DateTime) {
+        if ($value === '' || $value === null || $value instanceof DateTimeInterface) {
             return $value;
         }
 
-        if (is_string($value)) {
-            return Date::createFromFormat($this->getDateFormat(), $value);
+        if (! is_string($value)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                'Unable to hydrate. Expected null, string, or DateTimeInterface; %s was given.',
+                is_object($value) ? get_class($value) : gettype($value)
+            ));
         }
 
-        return $value;
+        $hydrated =  Date::createFromFormat($this->getDateFormat(), $value);
+
+        return $hydrated ?: $value;
     }
 
     /**
@@ -78,14 +86,14 @@ class DateTimeStrategy extends DateStrategy
      */
     private function getDateFormat()
     {
-        $patterns = array(
+        $patterns = [
             '/11\D21\D(1999|99)/',
             '/21\D11\D(1999|99)/',
             '/(1999|99)\D11\D21/',
-        );
-        $replacements = array('m/d/Y', 'd/m/Y', 'Y/m/d');
+        ];
+        $replacements = ['m/d/Y', 'd/m/Y', 'Y/m/d'];
 
-        $date = new \DateTime();
+        $date = new DateTime();
         $date->setDate(1999, 11, 21);
         return preg_replace($patterns, $replacements, $this->formatter->format($date)) . ' ' . $this->time;
     }

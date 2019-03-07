@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-5">
         <div class="pagination-info" aria-label="<?php echo $this->translate('Page navigation info'); ?>">
             <?php
             if ($this->totalItemCount > 0) {
@@ -10,10 +10,10 @@
             ?>
         </div>
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-7">
         <?php if ($this->pageCount): ?>
             <nav aria-label="<?php echo $this->translate('Page navigation'); ?>">
-                <ul class="pagination pagination-sm justify-content-center justify-content-md-end mb-0 mt-2 mt-md-0">
+                <ul class="pagination justify-content-center justify-content-md-end mb-0 mt-2 mt-md-0">
                     <?php if (isset($this->previous)): ?>
                         <!-- First page link -->
                         <li class="page-item">

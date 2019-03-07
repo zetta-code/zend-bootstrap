@@ -1,14 +1,15 @@
 <nav aria-label="breadcrumb" role="navigation">
-<ol class="breadcrumb page-head-nav">
-    <?php foreach ($this->pages as $page): ?>
-        <?php if ($page->isActive()): ?>
-            <li class="breadcrumb-item active">
-                <?php echo $this->translate($page->getLabel()); ?>
-            </li>
-        <?php else: ?>
-            <li class="breadcrumb-item">
-                <a href="<?php echo $page->getHref(); ?>"><?php echo $this->translate($page->getLabel()); ?></a>
-            </li>
-        <?php endif; ?>
-    <?php endforeach; ?>
-</ol>
+    <ol class="breadcrumb page-head-nav">
+        <?php foreach ($this->pages as $page): ?>
+            <?php if ($page->isActive()): ?>
+                <li class="breadcrumb-item active">
+                    <?php echo $this->translate($page->getLabel()); ?>
+                </li>
+            <?php else: ?>
+                <li class="breadcrumb-item">
+                    <a href="<?php echo $page->getHref(); ?>"><?php echo $this->translate($page->getLabel()); ?></a>
+                </li>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </ol>
+</nav>

@@ -6,9 +6,9 @@
 
 namespace Zetta\ZendBootstrap\Form\View\Helper;
 
+use Zend\Form\Element\MultiCheckbox as MultiCheckboxElement;
 use Zend\Form\LabelAwareInterface;
 use Zend\Form\View\Helper\FormMultiCheckbox as FormMultiCheckboxHelper;
-use Zend\Form\Element\MultiCheckbox as MultiCheckboxElement;
 
 class FormMultiCheckbox extends FormMultiCheckboxHelper
 {
@@ -20,13 +20,14 @@ class FormMultiCheckbox extends FormMultiCheckboxHelper
         array $options,
         array $selectedOptions,
         array $attributes
-    ) {
+    )
+    {
         $escapeHtmlHelper = $this->getEscapeHtmlHelper();
-        $labelHelper      = $this->getLabelHelper();
-        $labelClose       = $labelHelper->closeTag();
-        $labelPosition    = $this->getLabelPosition();
+        $labelHelper = $this->getLabelHelper();
+        $labelClose = $labelHelper->closeTag();
+        $labelPosition = $this->getLabelPosition();
         $globalLabelAttributes = [];
-        $closingBracket   = $this->getInlineClosingBracket();
+        $closingBracket = $this->getInlineClosingBracket();
 
         if ($element instanceof LabelAwareInterface) {
             $globalLabelAttributes = $element->getLabelAttributes();
@@ -37,7 +38,7 @@ class FormMultiCheckbox extends FormMultiCheckboxHelper
         }
 
         $combinedMarkup = [];
-        $count          = 0;
+        $count = 0;
 
         foreach ($options as $key => $optionSpec) {
             $count++;
@@ -45,14 +46,14 @@ class FormMultiCheckbox extends FormMultiCheckboxHelper
                 unset($attributes['id']);
             }
 
-            $value           = '';
-            $label           = '';
+            $value = '';
+            $label = '';
             $inputAttributes = $attributes;
             $labelAttributes = $globalLabelAttributes;
-            $selected        = (isset($inputAttributes['selected'])
+            $selected = (isset($inputAttributes['selected'])
                 && $inputAttributes['type'] != 'radio'
                 && $inputAttributes['selected']);
-            $disabled        = (isset($inputAttributes['disabled']) && $inputAttributes['disabled']);
+            $disabled = (isset($inputAttributes['disabled']) && $inputAttributes['disabled']);
 
             if (is_scalar($optionSpec)) {
                 $optionSpec = [
@@ -86,8 +87,8 @@ class FormMultiCheckbox extends FormMultiCheckboxHelper
                 $selected = true;
             }
 
-            $inputAttributes['value']    = $value;
-            $inputAttributes['checked']  = $selected;
+            $inputAttributes['value'] = $value;
+            $inputAttributes['checked'] = $selected;
             $inputAttributes['disabled'] = $disabled;
 
             if (isset($inputAttributes['id']) && !isset($labelAttributes['for'])) {
@@ -110,13 +111,13 @@ class FormMultiCheckbox extends FormMultiCheckboxHelper
                 );
             }
 
-            if (! $element instanceof LabelAwareInterface || ! $element->getLabelOption('disable_html_escape')) {
+            if (!$element instanceof LabelAwareInterface || !$element->getLabelOption('disable_html_escape')) {
                 $label = $escapeHtmlHelper($label);
             }
 
             $labelOpen = $labelHelper->openTag($labelAttributes);
             $label = $labelOpen . $label . $labelClose;
-            $template  = '%s%s';
+            $template = '%s%s';
             switch ($labelPosition) {
                 case self::LABEL_PREPEND:
                     $markup = sprintf($template, $label, $input);

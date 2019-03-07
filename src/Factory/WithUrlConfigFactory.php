@@ -4,22 +4,22 @@
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
-namespace Zetta\ZendBootstrap\Controller\Plugin\Service;
+namespace Zetta\ZendBootstrap\Factory;
 
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
-class EmailFactory implements FactoryInterface
+class WithUrlConfigFactory implements FactoryInterface
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $config = $container->get('config');
-        $transport = $container->get('mail.transport');
-
-        return new $requestedName($transport, $config['mail']['options']);
+        $config = isset($config['zend_boostrap']) && isset($config['zend_boostrap']['url'])
+            ? $config['zend_boostrap']['url']
+            : [];
+        return new $requestedName($config);
     }
-
 }

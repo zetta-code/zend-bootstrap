@@ -4,19 +4,20 @@
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
-namespace Zetta\ZendBootstrap\Controller\Plugin\Service;
+namespace Zetta\ZendBootstrap\View\Helper\Factory;
 
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Zetta\ZendBootstrap\Service\Thumbnail;
 
-class ThumbnailFactory implements FactoryInterface
+class RefererFactory implements FactoryInterface
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        return new $requestedName($container->get(Thumbnail::class));
+        $application = $container->get('Application');
+
+        return new $requestedName($application->getRequest());
     }
 }

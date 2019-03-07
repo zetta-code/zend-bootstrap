@@ -4,13 +4,13 @@
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
-namespace Zetta\ZendBootstrap\Controller\Plugin;
+namespace Zetta\ZendBootstrap\View\Helper;
 
 use Exception;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Zend\View\Helper\AbstractHelper;
 use Zetta\ZendBootstrap\Service\Thumbnail as ThumbnailService;
 
-class Thumbnail extends AbstractPlugin
+class Thumbnail extends AbstractHelper
 {
     /**
      * @var ThumbnailService

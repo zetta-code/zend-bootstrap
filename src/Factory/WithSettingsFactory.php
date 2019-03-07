@@ -4,22 +4,21 @@
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
-namespace Zetta\ZendBootstrap\Controller\Plugin\Service;
+namespace Zetta\ZendBootstrap\Factory;
 
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
+use Zetta\ZendBootstrap\Service\Settings;
 
-class MutexFactory implements FactoryInterface
+class WithSettingsFactory implements FactoryInterface
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $config = $container->get('config');
-        $config = isset($config['zend_boostrap']) && isset($config['zend_boostrap']['mutex'])
-            ? $config['zend_boostrap']['mutex']
-            : [];
-        return new $requestedName($config);
+        $settings = $container->get(Settings::class);
+
+        return new $requestedName($settings);
     }
 }

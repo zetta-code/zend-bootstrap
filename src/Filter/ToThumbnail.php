@@ -6,6 +6,7 @@
 
 namespace Zetta\ZendBootstrap\Filter;
 
+use ErrorException;
 use Zend\Filter\AbstractFilter;
 use Zend\Filter\Exception;
 use Zend\Stdlib\ErrorHandler;
@@ -49,7 +50,7 @@ class ToThumbnail extends AbstractFilter
     }
 
     /**
-     * @param  bool $flag Shall existing files be overwritten?
+     * @param bool $flag Shall existing files be overwritten?
      * @return self
      */
     public function setOverwrite($flag = true)
@@ -126,7 +127,7 @@ class ToThumbnail extends AbstractFilter
     }
 
     /**
-     * @param  string $targetFile Target file path
+     * @param string $targetFile Target file path
      * @throws Exception\InvalidArgumentException
      */
     protected function checkFileExists($targetFile)
@@ -151,10 +152,10 @@ class ToThumbnail extends AbstractFilter
     }
 
     /**
-     * @param  string $sourceFile Source file path
-     * @param  string $targetFile Target file path
-     * @throws Exception\RuntimeException
+     * @param string $sourceFile Source file path
+     * @param string $targetFile Target file path
      * @return bool
+     * @throws Exception\RuntimeException
      */
     protected function moveFile($sourceFile, $targetFile)
     {
@@ -162,7 +163,7 @@ class ToThumbnail extends AbstractFilter
         $result = rename($sourceFile, $targetFile);
         try {
             $warningException = ErrorHandler::stop();
-        } catch (\ErrorException $ex) {
+        } catch (ErrorException $ex) {
             $warningException = $ex;
         }
         if (!$result || null !== $warningException) {

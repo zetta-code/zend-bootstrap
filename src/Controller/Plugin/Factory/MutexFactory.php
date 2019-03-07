@@ -4,20 +4,22 @@
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
-namespace Zetta\ZendBootstrap\View\Helper\Service;
+namespace Zetta\ZendBootstrap\Controller\Plugin\Factory;
 
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
-class PaginatorFactory implements FactoryInterface
+class MutexFactory implements FactoryInterface
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $params = $container->get('ControllerPluginManager')->get('params');
-
-        return new $requestedName($params);
+        $config = $container->get('config');
+        $config = isset($config['zend_boostrap']) && isset($config['zend_boostrap']['mutex'])
+            ? $config['zend_boostrap']['mutex']
+            : [];
+        return new $requestedName($config);
     }
 }

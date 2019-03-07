@@ -23,7 +23,7 @@ class FormRadio extends FormMultiCheckbox
     /**
      * Get element name
      *
-     * @param  ElementInterface $element
+     * @param ElementInterface $element
      * @return string
      */
     protected static function getName(ElementInterface $element)

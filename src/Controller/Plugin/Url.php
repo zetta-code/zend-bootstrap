@@ -6,9 +6,11 @@
 
 namespace Zetta\ZendBootstrap\Controller\Plugin;
 
+use Zend\Http\Request;
 use Zend\Mvc\Controller\Plugin\Url as UrlPlugin;
 use Zend\Mvc\Exception;
 use Zend\Mvc\InjectApplicationEventInterface;
+use Zend\Mvc\MvcEvent;
 use Zend\Stdlib\ArrayUtils;
 
 class Url extends UrlPlugin
@@ -41,6 +43,17 @@ class Url extends UrlPlugin
             );
         }
 
+        $event = $controller->getEvent();
+        $request = null;
+        if ($event instanceof MvcEvent) {
+            $request = $event->getRequest();
+        }
+        if (!$request instanceof Request) {
+            throw new Exception\DomainException(
+                'Url plugin requires that controller event compose a request; none found'
+            );
+        }
+
         if (3 == func_num_args() && is_bool($options)) {
             $reuseMatchedParams = $options;
             $options = [];
@@ -52,7 +65,7 @@ class Url extends UrlPlugin
             $reuseQueriedParams = $this->isReuseQuery();
         }
         if ($reuseQueriedParams) {
-            $query = $controller->getRequest()->getQuery()->toArray();
+            $query = $request->getQuery()->toArray();
             if (count($query) > 0) {
                 $options = ArrayUtils::merge(['query' => $query], $options);
             }

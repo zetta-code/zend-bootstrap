@@ -4,20 +4,22 @@
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
-namespace Zetta\ZendBootstrap\View\Helper\Service;
+namespace Zetta\ZendBootstrap\Factory;
 
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
-class RefererFactory implements FactoryInterface
+class SettingsFactory implements FactoryInterface
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $application = $container->get('Application');
+        $config = $container->get('config');
+        $config = isset($config['settings_app']) ? $config['settings_app'] : [];
+        $filename = isset($config['filename']) ? $config['filename'] : './data/settings.php';
 
-        return new $requestedName($application->getRequest());
+        return new $requestedName($filename);
     }
 }
