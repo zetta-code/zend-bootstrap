@@ -23,8 +23,6 @@
   },
   "require": {
     "php": "^7.2",
-    "ext-intl": "^1.1",
-    "ext-gettext": "^7.2",
     "zendframework/zend-stdlib": "^3.0"
   },
   "require-dev": {
