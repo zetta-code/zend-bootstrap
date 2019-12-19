@@ -18,6 +18,11 @@ class Settings
     protected $filename;
 
     /**
+     * @var string
+     */
+    protected $defaultFilename;
+
+    /**
      * @var bool
      */
     protected $override = false;
@@ -28,14 +33,21 @@ class Settings
     protected $config;
 
     /**
+     * @var Config
+     */
+    protected $defaultConfig;
+
+    /**
      * Configure constructor.
      * @param string $filename
      * @param bool $override
      */
-    public function __construct($filename, $override = false)
+    public function __construct($filename, $override = false, $defaultFilename=null)
     {
         $this->filename = $filename;
         $this->override = $override;
+        $this->defaultFilename = $defaultFilename;
+        $this->config = $this->getDefaultConfig()->merge($this->getConfig());
     }
 
     public function __destruct()
@@ -64,6 +76,26 @@ class Settings
     public function setFilename($filename)
     {
         $this->filename = $filename;
+        return $this;
+    }
+
+    /**
+     * Get the Configure defaultFilename
+     * @return string
+     */
+    public function getDefaultFilename()
+    {
+        return $this->defaultFilename;
+    }
+
+    /**
+     * Set the Configure defaultFilename
+     * @param string $defaultFilename
+     * @return Settings
+     */
+    public function setDefaultFilename($defaultFilename)
+    {
+        $this->defaultFilename = $defaultFilename;
         return $this;
     }
 
@@ -106,6 +138,24 @@ class Settings
     }
 
     /**
+     * Get the Configure defaultConfig
+     * @return Config
+     */
+    protected function getDefaultConfig()
+    {
+        if ($this->defaultConfig === null) {
+            if (file_exists($this->defaultFilename)) {
+                $this->defaultFilename = realpath($this->defaultFilename);
+                $this->defaultConfig = new Config(include $this->defaultFilename, true);
+            } else {
+                $this->defaultFilename = getcwd() . $this->defaultFilename;
+                $this->defaultConfig = new Config([], true);
+            }
+        }
+        return $this->defaultConfig;
+    }
+
+    /**
      * Retrieve a value and return $default if there is no element set.
      *
      * @param array ...$name
@@ -121,6 +171,7 @@ class Settings
             foreach ($names as $name) {
                 $setting = $setting->get($name);
             }
+            
             return $setting;
         } else {
             throw new InvalidArgumentException();

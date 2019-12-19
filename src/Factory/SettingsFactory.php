@@ -19,7 +19,8 @@ class SettingsFactory implements FactoryInterface
         $config = $container->get('config');
         $config = isset($config['settings_app']) ? $config['settings_app'] : [];
         $filename = isset($config['filename']) ? $config['filename'] : './data/settings.php';
+        $defaultFilename = isset($config['defaultFilename']) ? $config['defaultFilename'] : './data/settings.php.dist';
 
-        return new $requestedName($filename);
+        return new $requestedName($filename, false, $defaultFilename);
     }
 }
