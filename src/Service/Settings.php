@@ -13,9 +13,14 @@ use Zend\Config\Writer\PhpArray;
 class Settings
 {
     /**
-     * @var string
+     * @var string|null
      */
     protected $filename;
+
+    /**
+     * @var string|null
+     */
+    protected $filenameDefault;
 
     /**
      * @var bool
@@ -28,70 +33,106 @@ class Settings
     protected $config;
 
     /**
+     * @var Config
+     */
+    protected $default;
+
+    /**
      * Configure constructor.
      * @param string $filename
+     * @param string|null $filenameDefault
      * @param bool $override
      */
-    public function __construct($filename, $override = false)
+    public function __construct(string $filename, ?string $filenameDefault = null, bool $override = false)
     {
         $this->filename = $filename;
+        $this->filenameDefault = $filenameDefault;
         $this->override = $override;
+        $this->merge();
     }
 
     public function __destruct()
     {
         if ($this->override) {
-            $writer = new PhpArray();
-            $writer->setUseBracketArraySyntax(true);
-            file_put_contents($this->filename, $writer->toString($this->getConfig()));
+            $this->save();
         }
     }
 
     /**
-     * Get the Configure filename
-     * @return string
+     * Get the Settings filename.
+     *
+     * @return string|null
      */
-    public function getFilename()
+    public function getFilename(): ?string
     {
         return $this->filename;
     }
 
     /**
-     * Set the Configure filename
-     * @param string $filename
+     * Set the Settings filename.
+     *
+     * @param string|null $filename
+     *
      * @return Settings
      */
-    public function setFilename($filename)
+    public function setFilename(?string $filename): Settings
     {
         $this->filename = $filename;
         return $this;
     }
 
     /**
-     * Get the Settings override
+     * Get the Settings filenameDefault.
+     *
+     * @return string|null
+     */
+    public function getFilenameDefault(): ?string
+    {
+        return $this->filenameDefault;
+    }
+
+    /**
+     * Set the Settings filenameDefault.
+     *
+     * @param string|null $filenameDefault
+     *
+     * @return Settings
+     */
+    public function setFilenameDefault(?string $filenameDefault): Settings
+    {
+        $this->filenameDefault = $filenameDefault;
+        return $this;
+    }
+
+    /**
+     * Get the Settings override.
+     *
      * @return bool
      */
-    public function isOverride()
+    public function isOverride(): bool
     {
         return $this->override;
     }
 
     /**
-     * Set the Settings override
+     * Set the Settings override.
+     *
      * @param bool $override
+     *
      * @return Settings
      */
-    public function setOverride($override)
+    public function setOverride(bool $override): Settings
     {
         $this->override = $override;
         return $this;
     }
 
     /**
-     * Get the Configure config
+     * Get the Settings config.
+     *
      * @return Config
      */
-    protected function getConfig()
+    public function getConfig(): Config
     {
         if ($this->config === null) {
             if (file_exists($this->filename)) {
@@ -102,13 +143,38 @@ class Settings
                 $this->config = new Config([], true);
             }
         }
+
         return $this->config;
+    }
+
+    /**
+     * Get the Settings default.
+     *
+     * @return Config
+     */
+    public function getDefault(): Config
+    {
+        if ($this->default === null) {
+            if (file_exists($this->filenameDefault)) {
+                $this->filenameDefault = realpath($this->filenameDefault);
+                $this->default = new Config(include $this->filenameDefault, true);
+            } elseif (file_exists($this->filename . '.dist')) {
+                $this->filenameDefault = realpath($this->filename . '.dist');
+                $this->default = new Config(include $this->filenameDefault, true);
+            } else {
+                $this->filenameDefault = getcwd() . $this->filenameDefault;
+                $this->default = new Config([], true);
+            }
+        }
+
+        return $this->default;
     }
 
     /**
      * Retrieve a value and return $default if there is no element set.
      *
-     * @param array ...$name
+     * @param array $names
+     *
      * @return mixed
      */
     public function get(...$names)
@@ -151,8 +217,8 @@ class Settings
     }
 
     /**
-     * @param string $name
-     * @param mixed $value
+     * @param array $names
+     *
      * @return Settings
      */
     public function put(...$names)
@@ -169,5 +235,25 @@ class Settings
         } else {
             throw new InvalidArgumentException();
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function save() {
+        $writer = new PhpArray();
+        $writer->setUseBracketArraySyntax(true);
+        return is_int(file_put_contents($this->filename, $writer->toString($this->getConfig())));
+    }
+
+    /**
+     * @return Settings
+     */
+    public function merge() {
+        $default = clone $this->getDefault();
+        $config = $this->getConfig();
+        $config->setReadOnly();
+        $this->config = $default->merge($config);
+        return $this;
     }
 }
