@@ -15,7 +15,7 @@ use IntlDateFormatter;
 use Zend\Hydrator\Strategy\Exception;
 use Zend\Hydrator\Strategy\StrategyInterface;
 
-class DateTimeStrategy implements StrategyInterface
+class CarbonDateTimeStrategy implements StrategyInterface
 {
     const DEFAULT_TIME_FORMAT = 'H:i';
 
@@ -40,7 +40,7 @@ class DateTimeStrategy implements StrategyInterface
     protected $startOfDay = true;
 
     /**
-     * DateTimeStrategy constructor.
+     * CarbonDateTimeStrategy constructor.
      *
      * @param string|null $dateFormat
      * @param string|null $timeFormat
@@ -55,7 +55,7 @@ class DateTimeStrategy implements StrategyInterface
     }
 
     /**
-     * Get the DateTimeStrategy formatter.
+     * Get the CarbonDateTimeStrategy formatter.
      *
      * @return IntlDateFormatter
      */
@@ -65,20 +65,20 @@ class DateTimeStrategy implements StrategyInterface
     }
 
     /**
-     * Set the DateTimeStrategy formatter.
+     * Set the CarbonDateTimeStrategy formatter.
      *
      * @param IntlDateFormatter $formatter
      *
-     * @return DateTimeStrategy
+     * @return CarbonDateTimeStrategy
      */
-    public function setFormatter(IntlDateFormatter $formatter): DateTimeStrategy
+    public function setFormatter(IntlDateFormatter $formatter): CarbonDateTimeStrategy
     {
         $this->formatter = $formatter;
         return $this;
     }
 
     /**
-     * Get the DateTimeStrategy dateFormat.
+     * Get the CarbonDateTimeStrategy dateFormat.
      *
      * @return string|null
      */
@@ -91,20 +91,20 @@ class DateTimeStrategy implements StrategyInterface
     }
 
     /**
-     * Set the DateTimeStrategy dateFormat.
+     * Set the CarbonDateTimeStrategy dateFormat.
      *
      * @param string|null $dateFormat
      *
-     * @return DateTimeStrategy
+     * @return CarbonDateTimeStrategy
      */
-    public function setDateFormat(?string $dateFormat): DateTimeStrategy
+    public function setDateFormat(?string $dateFormat): CarbonDateTimeStrategy
     {
         $this->dateFormat = $dateFormat;
         return $this;
     }
 
     /**
-     * Get the DateTimeStrategy timeFormat.
+     * Get the CarbonDateTimeStrategy timeFormat.
      *
      * @return string|null
      */
@@ -114,14 +114,14 @@ class DateTimeStrategy implements StrategyInterface
     }
 
     /**
-     * Set the DateTimeStrategy timeFormat.
+     * Set the CarbonDateTimeStrategy timeFormat.
      *
      * @param string|null $timeFormat
      * @param string $glue
      *
-     * @return DateTimeStrategy
+     * @return CarbonDateTimeStrategy
      */
-    public function setTimeFormat(?string $timeFormat, string $glue = ' '): DateTimeStrategy
+    public function setTimeFormat(?string $timeFormat, string $glue = ' '): CarbonDateTimeStrategy
     {
         if ($timeFormat !== null) {
             $timeFormat = $glue . $timeFormat;
@@ -131,7 +131,7 @@ class DateTimeStrategy implements StrategyInterface
     }
 
     /**
-     * Get the DateTimeStrategy startOfDay.
+     * Get the CarbonDateTimeStrategy startOfDay.
      *
      * @return bool
      */
@@ -141,13 +141,13 @@ class DateTimeStrategy implements StrategyInterface
     }
 
     /**
-     * Set the DateTimeStrategy startOfDay.
+     * Set the CarbonDateTimeStrategy startOfDay.
      *
      * @param bool $startOfDay
      *
-     * @return DateTimeStrategy
+     * @return CarbonDateTimeStrategy
      */
-    public function setStartOfDay(bool $startOfDay): DateTimeStrategy
+    public function setStartOfDay(bool $startOfDay): CarbonDateTimeStrategy
     {
         $this->startOfDay = $startOfDay;
         return $this;
@@ -156,7 +156,7 @@ class DateTimeStrategy implements StrategyInterface
     /**
      * @inheritdoc
      */
-    public function extract($value)
+    public function extract($value, ?object $object = null)
     {
         if ($value instanceof DateTimeInterface) {
             return $value->format($this->getDateFormat());
@@ -168,7 +168,7 @@ class DateTimeStrategy implements StrategyInterface
     /**
      * @inheritdoc
      */
-    public function hydrate($value)
+    public function hydrate($value, ?array $data)
     {
         if ($value === '' || $value === null || $value instanceof DateTimeInterface) {
             return $value;
@@ -186,11 +186,11 @@ class DateTimeStrategy implements StrategyInterface
     }
 
     /**
-     * Set the DateTimeStrategy time to default.
+     * Set the CarbonDateTimeStrategy time to default.
      *
-     * @return DateTimeStrategy
+     * @return CarbonDateTimeStrategy
      */
-    public function setDefaultTimeFormat(): DateTimeStrategy
+    public function setDefaultTimeFormat(): CarbonDateTimeStrategy
     {
         $this->timeFormat = self::DEFAULT_TIME_FORMAT;
         return $this;

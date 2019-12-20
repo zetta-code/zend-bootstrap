@@ -23,18 +23,20 @@
   },
   "require": {
     "php": "^7.2",
-    "zendframework/zend-stdlib": "^3.0"
+    "ext-intl": "*",
+    "zendframework/zend-stdlib": "^3.2"
   },
   "require-dev": {
-    "jenssegers/date": "^3.2",
-    "zendframework/zend-captcha": "^2.8",
-    "zendframework/zend-form": "^2.9",
-    "zendframework/zend-mail": "^2.7",
-    "zendframework/zend-mvc": "^3.0",
-    "zendframework/zend-mvc-plugin-flashmessenger": "^1.0",
-    "zendframework/zend-navigation": "^2.8",
-    "zendframework/zend-paginator": "^2.7",
-    "zendframework/zendservice-recaptcha": "^3.0"
+    "nesbot/carbon": "^2.28",
+    "zendframework/zend-captcha": "^2.9",
+    "zendframework/zend-form": "^2.14",
+    "zendframework/zend-mail": "^2.10",
+    "zendframework/zend-mvc": "^3.1",
+    "zendframework/zend-mvc-plugin-flashmessenger": "^1.2",
+    "zendframework/zend-navigation": "^2.9",
+    "zendframework/zend-paginator": "^2.8",
+    "zendframework/zendservice-recaptcha": "^3.2",
+    "doctrine/doctrine-orm-module": "^2.1"
   },
   "extra": {
     "zf": {
