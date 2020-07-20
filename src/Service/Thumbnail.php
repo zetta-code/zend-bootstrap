@@ -144,7 +144,9 @@ class Thumbnail
             $return = $target;
         }
 
-        imagedestroy($thumbnail);
+        if (is_resource($thumbnail)) {
+            imagedestroy($thumbnail);
+        }
         return $return;
     }
 
