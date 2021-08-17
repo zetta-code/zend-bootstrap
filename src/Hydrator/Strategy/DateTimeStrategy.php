@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
@@ -12,8 +13,8 @@ use Carbon\Carbon;
 use DateTime;
 use DateTimeInterface;
 use IntlDateFormatter;
-use Zend\Hydrator\Strategy\Exception;
-use Zend\Hydrator\Strategy\StrategyInterface;
+use Laminas\Hydrator\Strategy\Exception;
+use Laminas\Hydrator\Strategy\StrategyInterface;
 
 class DateTimeStrategy implements StrategyInterface
 {
@@ -174,7 +175,7 @@ class DateTimeStrategy implements StrategyInterface
             return $value;
         }
 
-        if (!is_string($value)) {
+        if (! is_string($value)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Unable to hydrate. Expected null, string, or DateTimeInterface; %s was given.',
                 is_object($value) ? get_class($value) : gettype($value)

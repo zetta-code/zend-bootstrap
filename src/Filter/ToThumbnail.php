@@ -1,15 +1,18 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-bootstrap for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
+
+declare(strict_types=1);
 
 namespace Zetta\ZendBootstrap\Filter;
 
 use ErrorException;
-use Zend\Filter\AbstractFilter;
-use Zend\Filter\Exception;
-use Zend\Stdlib\ErrorHandler;
+use Laminas\Filter\AbstractFilter;
+use Laminas\Filter\Exception;
+use Laminas\Stdlib\ErrorHandler;
 use Zetta\ZendBootstrap\Service\Thumbnail;
 
 class ToThumbnail extends AbstractFilter
@@ -82,14 +85,14 @@ class ToThumbnail extends AbstractFilter
      */
     public function filter($value)
     {
-        if (!is_scalar($value) && !is_array($value)) {
+        if (! is_scalar($value) && ! is_array($value)) {
             return $value;
         }
 
         // An uploaded file? Retrieve the 'tmp_name'
         $isFileUpload = false;
         if (is_array($value)) {
-            if (!isset($value['tmp_name'])) {
+            if (! isset($value['tmp_name'])) {
                 return $value;
             }
 
@@ -166,7 +169,7 @@ class ToThumbnail extends AbstractFilter
         } catch (ErrorException $ex) {
             $warningException = $ex;
         }
-        if (!$result || null !== $warningException) {
+        if (! $result || null !== $warningException) {
             throw new Exception\RuntimeException(
                 sprintf('File \'%s\' could not be renamed. An error occurred while processing the file.', $sourceFile),
                 0,

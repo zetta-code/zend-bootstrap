@@ -1,17 +1,20 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-bootstrap for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
+
+declare(strict_types=1);
 
 namespace Zetta\ZendBootstrap\View\Helper;
 
 use Traversable;
-use Zend\Http\Request;
-use Zend\Stdlib\ArrayUtils;
-use Zend\View\Exception;
-use Zend\View\Helper\AbstractHelper;
-use Zend\View\Helper\Url as UrlHelper;
+use Laminas\Http\Request;
+use Laminas\Stdlib\ArrayUtils;
+use Laminas\View\Exception;
+use Laminas\View\Helper\AbstractHelper;
+use Laminas\View\Helper\Url as UrlHelper;
 
 class Url extends AbstractHelper
 {
@@ -41,7 +44,7 @@ class Url extends AbstractHelper
         $this->request = $request;
         $this->url = $url;
 
-        if (isset($config['reuse_query']) && !empty($config['reuse_query'])) {
+        if (isset($config['reuse_query']) && ! empty($config['reuse_query'])) {
             $this->setReuseQuery($config['reuse_query']);
         }
     }

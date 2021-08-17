@@ -1,4 +1,5 @@
 <?php
+
 // get attribs for element
 $attribs = [
     'id'     => $page->getId(),
@@ -8,7 +9,7 @@ $attribs = [
 $classnames = [];
 if ($addClassToListItem === false) {
     $class = $page->getClass();
-    if (!empty($class)) {
+    if (! empty($class)) {
         $classnames[] = $page->getClass();
     }
 }
@@ -28,7 +29,7 @@ if (is_array($attr)) {
 }
 
 // does page have a href?
-if ($page->hasPages(! $menu->getRenderInvisible()) && !empty($menu->getHrefSubToggleOverride())) {
+if ($page->hasPages(! $menu->getRenderInvisible()) && ! empty($menu->getHrefSubToggleOverride())) {
     $href = $menu->getHrefSubToggleOverride();
 } else {
     $href = $page->getHref();
@@ -37,7 +38,7 @@ if ($href) {
     $element = 'a';
     $attribs['href'] = $href;
     $attribs['target'] = $page->getTarget();
-} elseif($page->get('no-image')) {
+} elseif ($page->get('no-image')) {
     $element = 'div';
 } else {
     $element = 'span';
@@ -45,8 +46,8 @@ if ($href) {
 
 
 foreach ($attribs as $key => $value) {
-    if ($value === null || (is_string($value) && !strlen($value))) {
-        if ( (strpos($key, "data") === false) && (strpos($key, "aria") === false) ) {
+    if ($value === null || (is_string($value) && ! strlen($value))) {
+        if ((strpos($key, "data") === false) && (strpos($key, "aria") === false)) {
             unset($attribs[$key]);
         }
     }
@@ -58,9 +59,9 @@ foreach ((array) $attribs as $key => $val) {
 
     if (('on' == substr($key, 0, 2)) || ('constraints' == $key)) {
         // Don't escape event attributes; _do_ substitute double quotes with singles
-        if (!is_scalar($val)) {
+        if (! is_scalar($val)) {
             // non-scalar data should be cast to JSON first
-            $val = \Zend\Json\Json::encode($val);
+            $val = \Laminas\Json\Json::encode($val);
         }
     } else {
         if (is_array($val)) {
@@ -88,7 +89,7 @@ if ($addonLeft) {
 }
 $user = $this->identity();
 if ($user) {
-    if (!$page->get('no-image')) {
+    if (! $page->get('no-image')) {
         if ($user->getAvatar() !== null) {
             $avatar = $user->getAvatar();
         } else {

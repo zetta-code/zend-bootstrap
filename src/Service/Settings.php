@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
@@ -9,8 +10,8 @@ declare(strict_types=1);
 namespace Zetta\ZendBootstrap\Service;
 
 use InvalidArgumentException;
-use Zend\Config\Config;
-use Zend\Config\Writer\PhpArray;
+use Laminas\Config\Config;
+use Laminas\Config\Writer\PhpArray;
 
 class Settings
 {
@@ -207,7 +208,7 @@ class Settings
         if (count($names) >= 1) {
             $setting = $this->getConfig();
             foreach ($names as $name) {
-                if (!$setting->offsetExists($name)) {
+                if (! $setting->offsetExists($name)) {
                     return false;
                 }
                 $setting = $setting->get($name);
@@ -242,7 +243,8 @@ class Settings
     /**
      * @return bool
      */
-    public function save() {
+    public function save()
+    {
         $writer = new PhpArray();
         $writer->setUseBracketArraySyntax(true);
         return is_int(file_put_contents($this->filename, $writer->toString($this->getConfig())));
@@ -251,7 +253,8 @@ class Settings
     /**
      * @return Settings
      */
-    public function merge() {
+    public function merge()
+    {
         $default = clone $this->getDefault();
         $config = $this->getConfig();
         $config->setReadOnly();

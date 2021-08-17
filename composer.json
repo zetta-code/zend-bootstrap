@@ -1,18 +1,18 @@
 {
   "name": "zetta-code/zend-bootstrap",
   "type": "library",
-  "description": "Zetta\\ZendBoostrap",
+  "description": "ZendBootstrap | Laminas Bootstrap by ZettaCode",
   "license": "MIT",
   "keywords": [
     "bootstrap",
-    "zf3"
+    "laminas"
   ],
   "homepage": "https://github.com/zetta-code/zend-bootstrap",
   "authors": [
     {
       "name": "Thiago S. Santos",
       "email": "thiagos.xsantos@gmail.com",
-      "homepage": "http://thiagossantos.com.br",
+      "homepage": "https://thi.dev.br",
       "role": "Developer"
     }
   ],
@@ -22,26 +22,35 @@
     }
   },
   "require": {
-    "php": "^7.2",
+    "php": "^7.2 || ^8.0",
     "ext-intl": "*",
-    "zendframework/zend-stdlib": "^3.2"
+    "laminas/laminas-stdlib": "^3.5"
   },
   "require-dev": {
-    "nesbot/carbon": "^2.28",
-    "zendframework/zend-captcha": "^2.9",
-    "zendframework/zend-form": "^2.14",
-    "zendframework/zend-mail": "^2.10",
-    "zendframework/zend-mvc": "^3.1",
-    "zendframework/zend-mvc-plugin-flashmessenger": "^1.2",
-    "zendframework/zend-navigation": "^2.9",
-    "zendframework/zend-paginator": "^2.8",
-    "zendframework/zendservice-recaptcha": "^3.2",
-    "doctrine/doctrine-orm-module": "^2.1"
+    "doctrine/doctrine-orm-module": "^4.0",
+    "laminas/laminas-captcha": "^2.10",
+    "laminas/laminas-form": "^2.17",
+    "laminas/laminas-mail": "^2.14",
+    "laminas/laminas-mvc": "^3.2",
+    "laminas/laminas-mvc-plugins": "^1.1",
+    "laminas/laminas-navigation": "^2.11",
+    "laminas/laminas-paginator": "^2.10",
+    "laminas/laminas-recaptcha": "^3.3",
+    "nesbot/carbon": "^2.51",
+    "phpspec/prophecy-phpunit": "^2.0",
+    "phpunit/phpunit": "^9.5",
+    "squizlabs/php_codesniffer": "^3.6"
   },
   "extra": {
-    "zf": {
+    "laminas": {
       "component": "Zetta\\ZendBootstrap",
       "config-provider": "Zetta\\ZendBootstrap\\ConfigProvider"
     }
+  },
+  "scripts": {
+    "cs-check": "phpcs",
+    "cs-fix": "phpcbf",
+    "test": "phpunit --colors=always",
+    "test-coverage": "phpunit --coverage-clover build/clover.xml"
   }
 }

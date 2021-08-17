@@ -1,15 +1,18 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-bootstrap for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
+
+declare(strict_types=1);
 
 namespace Zetta\ZendBootstrap\View\Helper\Factory;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
-use Zend\View\Helper\Url;
-use Zend\View\HelperPluginManager;
+use Laminas\ServiceManager\Factory\FactoryInterface;
+use Laminas\View\Helper\Url;
+use Laminas\View\HelperPluginManager;
 
 class UrlFactory implements FactoryInterface
 {

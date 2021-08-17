@@ -1,12 +1,15 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-bootstrap for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
+declare(strict_types=1);
+
 namespace Zetta\ZendBootstrap\Controller\Plugin;
 
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 use Zetta\ZendBootstrap\Service\Settings as SettingsService;
 
 class Settings extends AbstractPlugin

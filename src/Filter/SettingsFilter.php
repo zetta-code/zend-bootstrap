@@ -1,14 +1,17 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-bootstrap for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
+declare(strict_types=1);
+
 namespace Zetta\ZendBootstrap\Filter;
 
-use Zend\Filter;
-use Zend\InputFilter\InputFilter;
-use Zend\Validator;
+use Laminas\Filter;
+use Laminas\InputFilter\InputFilter;
+use Laminas\Validator;
 
 class SettingsFilter extends InputFilter
 {

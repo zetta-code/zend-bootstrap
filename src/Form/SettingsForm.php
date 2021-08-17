@@ -1,13 +1,16 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-bootstrap for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
+declare(strict_types=1);
+
 namespace Zetta\ZendBootstrap\Form;
 
-use Zend\Form\Element;
-use Zend\Form\Form;
+use Laminas\Form\Element;
+use Laminas\Form\Form;
 use Zetta\ZendBootstrap\Filter\SettingsFilter;
 use Zetta\ZendBootstrap\Form\Fieldset\SettingFieldset;
 

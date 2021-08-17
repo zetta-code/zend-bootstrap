@@ -1,14 +1,17 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-bootstrap for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
+
+declare(strict_types=1);
 
 namespace Zetta\ZendBootstrap\Controller\Plugin;
 
 use Traversable;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use Zend\Mvc\Exception;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\Mvc\Exception;
 
 class Referer extends AbstractPlugin
 {
@@ -29,7 +32,7 @@ class Referer extends AbstractPlugin
     public function fromRoute($route = null, $params = [], $options = [], $reuseMatchedParams = false)
     {
         $controller = $this->getController();
-        if (!$controller || !method_exists($controller, 'plugin')) {
+        if (! $controller || ! method_exists($controller, 'plugin')) {
             throw new Exception\DomainException('Redirect plugin requires a controller that defines the plugin() method');
         }
 

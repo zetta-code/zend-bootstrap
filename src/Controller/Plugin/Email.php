@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link      http://github.com/zetta-repo/zend-bootstrap for the canonical source repository
  * @copyright Copyright (c) 2017 Zetta Code
@@ -6,10 +7,10 @@
 
 namespace Zetta\ZendBootstrap\Controller\Plugin;
 
-use Zend\Mail\Message;
-use Zend\Mime;
-use Zend\Mvc\Controller\AbstractController;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\Mail\Message;
+use Laminas\Mime;
+use Laminas\Mvc\Controller\AbstractController;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 
 class Email extends AbstractPlugin
 {
@@ -120,7 +121,6 @@ class Email extends AbstractPlugin
 
                 $body->addPart($attachment);
             }
-
         } else {
             // No attachments, just add the two textual parts to the body
             if ($text !== null) {

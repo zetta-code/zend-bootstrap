@@ -1,15 +1,18 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-bootstrap for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
+declare(strict_types=1);
+
 namespace Zetta\ZendBootstrap\View\Helper;
 
-use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger as PluginFlashMessenger;
-use Zend\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger as FlashMessengerHelper;
-use Zend\Stdlib\ArrayUtils;
-use Zend\View\Helper\AbstractHelper;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger as PluginFlashMessenger;
+use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger as FlashMessengerHelper;
+use Laminas\Stdlib\ArrayUtils;
+use Laminas\View\Helper\AbstractHelper;
 
 class FlashMessenger extends AbstractHelper
 {
@@ -96,7 +99,7 @@ class FlashMessenger extends AbstractHelper
             $this->flashMessengerHelper = $this->view->plugin(FlashMessengerHelper::class);
         }
 
-        if (!$this->flashMessengerHelper instanceof FlashMessengerHelper) {
+        if (! $this->flashMessengerHelper instanceof FlashMessengerHelper) {
             $this->flashMessengerHelper = new FlashMessengerHelper();
         }
 

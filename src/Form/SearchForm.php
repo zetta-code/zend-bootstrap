@@ -1,16 +1,19 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-bootstrap for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
+declare(strict_types=1);
+
 namespace Zetta\ZendBootstrap\Form;
 
-use Zend\Filter;
-use Zend\Form\Element;
-use Zend\Form\Form;
-use Zend\InputFilter\InputFilter;
-use Zend\Validator;
+use Laminas\Filter;
+use Laminas\Form\Element;
+use Laminas\Form\Form;
+use Laminas\InputFilter\InputFilter;
+use Laminas\Validator;
 
 class SearchForm extends Form
 {

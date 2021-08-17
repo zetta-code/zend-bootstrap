@@ -1,12 +1,15 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-bootstrap for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
+declare(strict_types=1);
+
 namespace Zetta\ZendBootstrap\Controller\Plugin;
 
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 
 class Mutex extends AbstractPlugin
 {
@@ -20,11 +23,11 @@ class Mutex extends AbstractPlugin
      */
     public function __construct($config)
     {
-        if (isset($config['dir']) && !empty($config['dir'])) {
+        if (isset($config['dir']) && ! empty($config['dir'])) {
             $this->dir = $config['dir'];
         }
 
-        if (!file_exists($this->dir)) {
+        if (! file_exists($this->dir)) {
             mkdir($this->dir, 0777, true);
         }
     }
@@ -35,7 +38,7 @@ class Mutex extends AbstractPlugin
      */
     protected function init($key)
     {
-        if (!isset($this->files[$key])) {
+        if (! isset($this->files[$key])) {
             $this->files[$key] = fopen($this->dir . $key . '.lockfile', 'w+');
             $this->owns[$key] = false;
         }
@@ -50,7 +53,7 @@ class Mutex extends AbstractPlugin
     {
         $this->init($key);
 
-        if (!flock($this->files[$key], LOCK_EX)) { //failed
+        if (! flock($this->files[$key], LOCK_EX)) { //failed
             error_log('ExclusiveLock::acquire_lock FAILED to acquire lock [' . $key . ']');
             return false;
         } else {
@@ -71,7 +74,7 @@ class Mutex extends AbstractPlugin
     public function unlock($key)
     {
         if (isset($this->owns[$key]) && $this->owns[$key] === true) {
-            if (!flock($this->files[$key], LOCK_UN)) { //failed
+            if (! flock($this->files[$key], LOCK_UN)) { //failed
                 error_log('ExclusiveLock::lock FAILED to release lock [' . $key . ']');
                 return false;
             }

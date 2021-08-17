@@ -1,18 +1,21 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-bootstrap for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
+
+declare(strict_types=1);
 
 namespace Zetta\ZendBootstrap\View\Helper;
 
 use RecursiveIteratorIterator;
-use Zend\Navigation\AbstractContainer;
-use Zend\Navigation\Page\AbstractPage;
-use Zend\View\Exception;
-use Zend\View\Helper\Navigation\Menu as ZendMenu;
+use Laminas\Navigation\AbstractContainer;
+use Laminas\Navigation\Page\AbstractPage;
+use Laminas\View\Exception;
+use Laminas\View\Helper\Navigation\Menu as LaminasMenu;
 
-class Menu extends ZendMenu
+class Menu extends LaminasMenu
 {
     /**
      * default CSS class to use for li elements
@@ -92,14 +95,13 @@ class Menu extends ZendMenu
         $escapeLabels,
         $addClassToListItem,
         $liActiveClass
-    )
-    {
+    ) {
         $html = '';
 
         // find deepest active
         $found = $this->findActive($container, $minDepth, $maxDepth);
 
-        /* @var $escaper \Zend\View\Helper\EscapeHtmlAttr */
+        /* @var $escaper \Laminas\View\Helper\EscapeHtmlAttr */
         $escaper = $this->view->plugin('escapeHtmlAttr');
 
         if ($found) {
@@ -125,10 +127,10 @@ class Menu extends ZendMenu
             $depth = $iterator->getDepth();
             $page->set('depth', $depth);
             $isActive = $page->isActive(true);
-            if ($depth < $minDepth || !$this->accept($page)) {
+            if ($depth < $minDepth || ! $this->accept($page)) {
                 // page is below minDepth or not accepted by acl/visibility
                 continue;
-            } elseif ($onlyActive && !$isActive) {
+            } elseif ($onlyActive && ! $isActive) {
                 // page is not active itself, but might be in the active branch
                 $accept = false;
                 if ($foundPage) {
@@ -137,7 +139,8 @@ class Menu extends ZendMenu
                         $accept = true;
                     } elseif ($foundPage->getParent()->hasPage($page)) {
                         // page is a sibling of the active page...
-                        if (!$foundPage->hasPages(!$this->renderInvisible)
+                        if (
+                            ! $foundPage->hasPages(! $this->renderInvisible)
                             || is_int($maxDepth) && $foundDepth + 1 > $maxDepth
                         ) {
                             // accept if active page has no children, or the
@@ -146,7 +149,7 @@ class Menu extends ZendMenu
                         }
                     }
                 }
-                if (!$accept) {
+                if (! $accept) {
                     continue;
                 }
             }
@@ -185,7 +188,7 @@ class Menu extends ZendMenu
             if ($isActive) {
                 $liClasses[] = $liActiveClass;
             }
-            if (!empty($this->getDefaultLiClass())) {
+            if (! empty($this->getDefaultLiClass())) {
                 $liClasses[] = $this->getDefaultLiClass();
             }
             $isBelowMaxLevel = ($maxDepth > $depth) || ($maxDepth === null) || ($maxDepth === false);
@@ -239,7 +242,7 @@ class Menu extends ZendMenu
         $classnames = [];
         if ($addClassToListItem === false) {
             $class = $page->getClass();
-            if (!empty($class)) {
+            if (! empty($class)) {
                 $classnames[] = $page->getClass();
             }
         }
@@ -259,7 +262,7 @@ class Menu extends ZendMenu
         }
 
         // does page have a href?
-        if ($page->hasPages(! $this->renderInvisible) && !empty($this->getHrefSubToggleOverride())) {
+        if ($page->hasPages(! $this->renderInvisible) && ! empty($this->getHrefSubToggleOverride())) {
             $href = $this->getHrefSubToggleOverride();
         } else {
             $href = $page->getHref();
@@ -279,7 +282,7 @@ class Menu extends ZendMenu
         }
         $label = $this->translate($page->getLabel(), $page->getTextDomain());
         if ($escapeLabel === true) {
-            /** @var \Zend\View\Helper\EscapeHtml $escaper */
+            /** @var \Laminas\View\Helper\EscapeHtml $escaper */
             $escaper = $this->view->plugin('escapeHtml');
             $html .= $escaper($label);
         } else {
@@ -335,7 +338,7 @@ class Menu extends ZendMenu
 
         ];
 
-        /** @var \Zend\View\Helper\Partial $partialHelper */
+        /** @var \Laminas\View\Helper\Partial $partialHelper */
         $partialHelper = $this->view->plugin('partial');
         if (is_array($partial)) {
             if (count($partial) != 2) {

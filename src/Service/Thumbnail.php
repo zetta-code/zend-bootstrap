@@ -1,8 +1,11 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-bootstrap for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
+
+declare(strict_types=1);
 
 namespace Zetta\ZendBootstrap\Service;
 
@@ -59,16 +62,16 @@ class Thumbnail
     {
         //File Resize Crop to Blob All in One
         switch (exif_imagetype($path)) {
-            case IMAGETYPE_GIF :
+            case IMAGETYPE_GIF:
                 $image = imagecreatefromgif($path);
                 break;
-            case IMAGETYPE_JPEG :
+            case IMAGETYPE_JPEG:
                 $image = imagecreatefromjpeg($path);
                 break;
-            case IMAGETYPE_PNG :
+            case IMAGETYPE_PNG:
                 $image = imagecreatefrompng($path);
                 break;
-            default :
+            default:
                 if ('image/svg+xml' === mime_content_type($path)) {
                     return 'image/svg+xml';
                 } else {
@@ -105,9 +108,12 @@ class Thumbnail
             $image,
             0 - ($newWidth - $width) / 2, // Center the image horizontally
             0 - ($newHeight - $height) / 2, // Center the image vertically
-            0, 0,
-            $newWidth, $newHeight,
-            $originalWidth, $originalHeight
+            0,
+            0,
+            $newWidth,
+            $newHeight,
+            $originalWidth,
+            $originalHeight
         );
         imagesavealpha($thumbnail, true);
         return $thumbnail;

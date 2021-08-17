@@ -1,14 +1,17 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-bootstrap for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
+declare(strict_types=1);
+
 namespace Zetta\ZendBootstrap\Form\View\Helper;
 
-use Zend\Form\Element\MultiCheckbox as MultiCheckboxElement;
-use Zend\Form\LabelAwareInterface;
-use Zend\Form\View\Helper\FormMultiCheckbox as FormMultiCheckboxHelper;
+use Laminas\Form\Element\MultiCheckbox as MultiCheckboxElement;
+use Laminas\Form\LabelAwareInterface;
+use Laminas\Form\View\Helper\FormMultiCheckbox as FormMultiCheckboxHelper;
 
 class FormMultiCheckbox extends FormMultiCheckboxHelper
 {
@@ -20,8 +23,7 @@ class FormMultiCheckbox extends FormMultiCheckboxHelper
         array $options,
         array $selectedOptions,
         array $attributes
-    )
-    {
+    ) {
         $escapeHtmlHelper = $this->getEscapeHtmlHelper();
         $labelHelper = $this->getLabelHelper();
         $labelClose = $labelHelper->closeTag();
@@ -91,9 +93,9 @@ class FormMultiCheckbox extends FormMultiCheckboxHelper
             $inputAttributes['checked'] = $selected;
             $inputAttributes['disabled'] = $disabled;
 
-            if (isset($inputAttributes['id']) && !isset($labelAttributes['for'])) {
+            if (isset($inputAttributes['id']) && ! isset($labelAttributes['for'])) {
                 $labelAttributes['for'] = $inputAttributes['id'];
-            } elseif (!isset($labelAttributes['for'])) {
+            } elseif (! isset($labelAttributes['for'])) {
                 $inputAttributes['id'] = $element->getName() . '-' . $value;
                 $labelAttributes['for'] = $element->getName() . '-' . $value;
             }
@@ -111,7 +113,7 @@ class FormMultiCheckbox extends FormMultiCheckboxHelper
                 );
             }
 
-            if (!$element instanceof LabelAwareInterface || !$element->getLabelOption('disable_html_escape')) {
+            if (! $element instanceof LabelAwareInterface || ! $element->getLabelOption('disable_html_escape')) {
                 $label = $escapeHtmlHelper($label);
             }
 

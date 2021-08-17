@@ -1,17 +1,20 @@
 <?php
+
 /**
- * @link      http://github.com/zetta-code/zend-bootstrap for the canonical source repository
+ * @link      https://github.com/zetta-code/zend-bootstrap for the canonical source repository
  * @copyright Copyright (c) 2018 Zetta Code
  */
 
+declare(strict_types=1);
+
 namespace Zetta\ZendBootstrap\Form\View\Helper;
 
-use Zend\Form\Element\Button;
-use Zend\Form\Element\Captcha;
-use Zend\Form\Element\MonthSelect;
-use Zend\Form\ElementInterface;
-use Zend\Form\LabelAwareInterface;
-use Zend\Form\View\Helper\FormRow as FormRowHelper;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Captcha;
+use Laminas\Form\Element\MonthSelect;
+use Laminas\Form\ElementInterface;
+use Laminas\Form\LabelAwareInterface;
+use Laminas\Form\View\Helper\FormRow as FormRowHelper;
 
 class FormRow extends FormRowHelper
 {
@@ -56,7 +59,7 @@ class FormRow extends FormRowHelper
         }
 
         // Does this element have errors ?
-        if (count($element->getMessages()) > 0 && !empty($inputErrorClass)) {
+        if (count($element->getMessages()) > 0 && ! empty($inputErrorClass)) {
             $classAttributes = ($element->hasAttribute('class') ? $element->getAttribute('class') . ' ' : '');
             $classAttributes = $classAttributes . $inputErrorClass;
 
@@ -76,11 +79,11 @@ class FormRow extends FormRowHelper
         }
 
         if ($this->renderErrors) {
-            if (!empty($element->getOption('input_error_class'))) {
+            if (! empty($element->getOption('input_error_class'))) {
                 $this->setInputErrorClass($element->getOption('input_error_class'));
             }
 
-            if (!empty($element->getOption('element_errors_attributes'))) {
+            if (! empty($element->getOption('element_errors_attributes'))) {
                 $elementErrorsAttributes = $element->getOption('element_errors_attributes');
             } else {
                 $elementErrorsAttributes = $this->getElementErrorsAttributes();
@@ -94,14 +97,14 @@ class FormRow extends FormRowHelper
         }
 
         $divOption = $element->getOption('div');
-        if (!empty($divOption)) {
+        if (! empty($divOption)) {
             $divClass = isset($divOption['class']) ? $divOption['class'] : '';
             $divErrorClass = isset($divOption['class_error']) ? $divOption['class_error'] : '';
-            if (count($element->getMessages()) > 0 && !empty($divErrorClass)) {
-                $divClass = !empty($divClass) ? $divClass . ' ' : '';
+            if (count($element->getMessages()) > 0 && ! empty($divErrorClass)) {
+                $divClass = ! empty($divClass) ? $divClass . ' ' : '';
                 $divClass = $divClass . $divErrorClass;
             }
-            if (!empty($divClass)) {
+            if (! empty($divClass)) {
                 $div = sprintf('<div class="%s">', $divClass) . '%s</div>';
             } else {
                 $div = '<div>%s</div>';
@@ -112,8 +115,10 @@ class FormRow extends FormRowHelper
 
         // hidden elements do not need a <label> -https://github.com/zendframework/zf2/issues/5607
         $type = $element->getAttribute('type');
-        if ($type === 'multi_checkbox'
-            || $type === 'radio') {
+        if (
+            $type === 'multi_checkbox'
+            || $type === 'radio'
+        ) {
             $this->getView()->plugin('form' . str_replace('_', '', $type))->setSeparator('</div><div class="' . $divClass . '">');
         }
         $elementString = $elementHelper->render($element);
@@ -125,7 +130,7 @@ class FormRow extends FormRowHelper
                 $labelAttributes = $element->getLabelAttributes();
             }
 
-            if (!$element instanceof LabelAwareInterface || !$element->getLabelOption('disable_html_escape')) {
+            if (! $element instanceof LabelAwareInterface || ! $element->getLabelOption('disable_html_escape')) {
                 $label = $escapeHtmlHelper($label);
             }
 
@@ -135,7 +140,8 @@ class FormRow extends FormRowHelper
 
             // Multicheckbox elements have to be handled differently as the HTML standard does not allow nested
             // labels. The semantic way is to group them inside a fieldset
-            if ($type === 'multi_checkbox'
+            if (
+                $type === 'multi_checkbox'
                 || $type === 'radio'
                 || $element instanceof MonthSelect
                 || $element instanceof Captcha
@@ -148,14 +154,14 @@ class FormRow extends FormRowHelper
                 );
             } else {
                 $horizontalClass = $element->getOption('horizontal_class');
-                if (!empty($horizontalClass)) {
+                if (! empty($horizontalClass)) {
                     $elementString = '<div class="' . $horizontalClass . '">' . $elementString . $elementErrors . '</div>';
                     $elementErrors = '';
                 }
 
                 // Ensure element and label will be separated if element has an `id`-attribute.
                 // If element has label option `always_wrap` it will be nested in any case.
-                if ($element instanceof LabelAwareInterface && !$element->getLabelOption('always_wrap')) {
+                if ($element instanceof LabelAwareInterface && ! $element->getLabelOption('always_wrap')) {
                     $labelOpen = '';
                     $labelClose = '';
                     $label = $labelHelper->openTag($element) . $label . $labelHelper->closeTag();
@@ -164,7 +170,8 @@ class FormRow extends FormRowHelper
                     $labelClose = $labelHelper->closeTag();
                 }
 
-                if ($label !== ''
+                if (
+                    $label !== ''
                     && ($element instanceof LabelAwareInterface && $element->getLabelOption('always_wrap'))
                 ) {
                     if ($element->getLabelOption('span_class')) {
