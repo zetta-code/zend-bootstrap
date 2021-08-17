@@ -157,7 +157,7 @@ class DateTimeStrategy implements StrategyInterface
     /**
      * @inheritdoc
      */
-    public function extract($value)
+    public function extract($value, ?object $object = null)
     {
         if ($value instanceof DateTimeInterface) {
             return $value->format($this->getDateFormat());
@@ -169,7 +169,7 @@ class DateTimeStrategy implements StrategyInterface
     /**
      * @inheritdoc
      */
-    public function hydrate($value)
+    public function hydrate($value, ?array $data)
     {
         if ($value === '' || $value === null || $value instanceof DateTimeInterface) {
             return $value;
