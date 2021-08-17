@@ -1,23 +1,16 @@
+# vscode files
+.vscode
+
 # Composer files
 composer.phar
 vendor/
 
 # Local configs
 config/autoload/*.local.php
+config/development.config.php
 
 # Binary gettext files
 *.mo
-
-# Data
-data/logs/
-data/cache/
-data/sessions/
-data/tmp/
-temp/
-
-#Doctrine 2
-data/DoctrineORMModule/Proxy/
-data/DoctrineORMModule/cache/
 
 # IDE and editor specific files #
 /nbproject
@@ -34,13 +27,8 @@ ehthumbs.db
 Thumbs.db
 
 # User specific & automatically generated files #
+.vagrant/
 build/
 dist/
 tags/
 phpunit.xml
-phpcs.xml
-
-
-# Legacy ZF1
-demos/
-extras/documentation
