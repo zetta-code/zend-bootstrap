@@ -94,11 +94,11 @@ class Thumbnail
         $thumbAspect = 1.0;
 
         if ($originalAspect >= $thumbAspect) {
-            $newHeight = $height;
-            $newWidth = (int)$originalWidth / ($originalHeight / $height);
+            $newHeight = (int)$height;
+            $newWidth = (int)($originalWidth / ($originalHeight / $height));
         } else {
-            $newWidth = $width;
-            $newHeight = (int)$originalHeight / ($originalWidth / $width);
+            $newWidth = (int)$width;
+            $newHeight = (int)($originalHeight / ($originalWidth / $width));
         }
 
         $thumbnail = imagecreatetruecolor($width, $height);
