@@ -54,11 +54,14 @@ class Thumbnail
 
     /**
      * @param string $path
-     * @param null $width
-     * @param null $height
+     * @param int|null $width
+     * @param int|null $height
+     *
      * @return resource|string
+     *
+     * @throws Exception
      */
-    private function makeThumbnail($path, $width = null, $height = null)
+    private function makeThumbnail(string $path, $width = null, $height = null)
     {
         //File Resize Crop to Blob All in One
         switch (exif_imagetype($path)) {
@@ -92,10 +95,10 @@ class Thumbnail
 
         if ($originalAspect >= $thumbAspect) {
             $newHeight = $height;
-            $newWidth = $originalWidth / ($originalHeight / $height);
+            $newWidth = (int)$originalWidth / ($originalHeight / $height);
         } else {
             $newWidth = $width;
-            $newHeight = $originalHeight / ($originalWidth / $width);
+            $newHeight = (int)$originalHeight / ($originalWidth / $width);
         }
 
         $thumbnail = imagecreatetruecolor($width, $height);
@@ -106,8 +109,8 @@ class Thumbnail
         imagecopyresampled(
             $thumbnail,
             $image,
-            0 - ($newWidth - $width) / 2, // Center the image horizontally
-            0 - ($newHeight - $height) / 2, // Center the image vertically
+            0 - (int)(($newWidth - $width) / 2), // Center the image horizontally
+            0 - (int)(($newHeight - $height) / 2), // Center the image vertically
             0,
             0,
             $newWidth,
@@ -122,8 +125,8 @@ class Thumbnail
     /**
      * @param string $path
      * @param null $target
-     * @param null $width
-     * @param null $height
+     * @param int|null $width
+     * @param int|null $height
      * @return null|string
      */
     public function process($path, $target = null, $width = null, $height = null)

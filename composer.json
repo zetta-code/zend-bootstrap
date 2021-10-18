@@ -23,6 +23,9 @@
   },
   "require": {
     "php": "^7.2 || ^8.0",
+    "ext-exif": "*",
+    "ext-fileinfo": "*",
+    "ext-gd": "*",
     "ext-intl": "*",
     "laminas/laminas-stdlib": "^3.5"
   },
